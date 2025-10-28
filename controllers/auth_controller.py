@@ -1,6 +1,7 @@
 from flask import jsonify, request
 from extensions import db, bcrypt
 from models.user_model import User
+from datetime import datetime
 from validations.user_schema import validate_register, validate_login
 from flask_jwt_extended import create_access_token
 
@@ -11,14 +12,30 @@ def register():
 
     data = request.json
     hashed_pw = bcrypt.generate_password_hash(data['password']).decode('utf-8')
-    user = User(name=data['name'], email=data['email'], password=hashed_pw)
+
+    user = User(
+        name=data['name'],
+        email=data['email'],
+        password=hashed_pw,
+        role='user',              # default role user
+        status='inactive',          # default status active
+        timestamp=datetime.utcnow()  # waktu pembuatan akun
+    )
+
     db.session.add(user)
     db.session.commit()
 
     return jsonify({
         "status": True,
-        "user": {"id": user.id, "name": user.name, "email": user.email},
-        "message": "User registered successfully"
+        "user": {
+            "id": user.id,
+            "name": user.name,
+            "email": user.email,
+            "role": user.role,
+            "status": user.status,
+            "timestamp": user.timestamp.isoformat()
+        },
+        "message": "User registered successfully wait for admin applying"
     }), 201
 
 
