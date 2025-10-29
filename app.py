@@ -10,6 +10,7 @@ def create_app():
 
     from models.user_model import User
     from models.sensor_model import Sensor
+    from models.aktuator_model import Aktuator
 
     # Konfigurasi database MySQL
     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/hidroponik_db'
@@ -21,13 +22,13 @@ def create_app():
     bcrypt.init_app(app)
     Migrate(app, db)
 
-    # ⬅️ Aktifkan CORS untuk semua route
+    # Aktifkan CORS untuk semua route
     CORS(app)
 
     # Register blueprint
     app.register_blueprint(auth_bp, url_prefix="/api")
 
-    #JWT
+    # JWT
     app.config["JWT_SECRET_KEY"] = "super-secret-key-replace-with-env-var"
     jwt = JWTManager(app)
 
