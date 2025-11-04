@@ -1,6 +1,7 @@
 /* ====================================
    Dashboard Hidroponik IoT
    Modern & Clean Design with SVG Icons
+   Color Palette: #456028, #94a65e, #dddda1
    ==================================== */
 
 * {
@@ -11,7 +12,7 @@
 
 body {
     font-family: 'Poppins', sans-serif;
-    background-color: #f5f7fa;
+    background-color: #fafaef;
     color: #333;
     display: flex;
     min-height: 100vh;
@@ -20,7 +21,7 @@ body {
 /* ===== SIDEBAR ===== */
 .sidebar {
     width: 260px;
-    background: linear-gradient(180deg, #2e7d32, #1b5e20);
+    background: linear-gradient(180deg, #456028, #2d3d1a);
     color: white;
     display: flex;
     flex-direction: column;
@@ -51,7 +52,7 @@ body {
 }
 
 .sidebar .logo span {
-    color: #a5d6a7;
+    color: #dddda1;
 }
 
 .sidebar nav {
@@ -77,7 +78,7 @@ body {
 .nav-item.active {
     background-color: rgba(255, 255, 255, 0.15);
     color: white;
-    border-left: 4px solid #a5d6a7;
+    border-left: 4px solid #dddda1;
 }
 
 .nav-item .icon {
@@ -160,7 +161,7 @@ header {
 
 .header-left h1 {
     font-size: 1.8em;
-    color: #2e7d32;
+    color: #456028;
     margin-bottom: 5px;
 }
 
@@ -180,7 +181,7 @@ header {
     align-items: center;
     gap: 8px;
     padding: 8px 16px;
-    background-color: #e8f5e9;
+    background-color: #f5f5e8;
     border-radius: 20px;
     font-size: 0.9em;
 }
@@ -193,7 +194,7 @@ header {
 }
 
 .status-dot.active {
-    background-color: #66bb6a;
+    background-color: #94a65e;
     animation: pulse 2s infinite;
 }
 
@@ -216,7 +217,7 @@ header {
 .user-profile svg {
     width: 20px;
     height: 20px;
-    stroke: #2e7d32;
+    stroke: #456028;
     fill: none;
     stroke-width: 2;
     stroke-linecap: round;
@@ -248,7 +249,7 @@ header {
 }
 
 .sensor-icon {
-    background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+    background: linear-gradient(135deg, #f5f5e8, #dddda1);
     padding: 15px;
     border-radius: 12px;
     display: flex;
@@ -262,7 +263,7 @@ header {
 .sensor-icon svg {
     width: 30px;
     height: 30px;
-    stroke: #2e7d32;
+    stroke: #456028;
     fill: none;
     stroke-width: 2;
     stroke-linecap: round;
@@ -278,7 +279,7 @@ header {
 .sensor-value {
     font-size: 1.5em;
     font-weight: 700;
-    color: #2e7d32;
+    color: #456028;
     margin-bottom: 8px;
 }
 
@@ -291,8 +292,8 @@ header {
 }
 
 .sensor-status.normal {
-    background-color: #e8f5e9;
-    color: #2e7d32;
+    background-color: #f5f5e8;
+    color: #456028;
 }
 
 .sensor-status.warning {
@@ -312,7 +313,7 @@ header {
 
 .monitoring-section h2 {
     font-size: 1.5em;
-    color: #2e7d32;
+    color: #456028;
     margin-bottom: 25px;
     display: flex;
     align-items: center;
@@ -322,7 +323,7 @@ header {
 .monitoring-section h2 svg {
     width: 28px;
     height: 28px;
-    stroke: #2e7d32;
+    stroke: #456028;
     fill: none;
     stroke-width: 2;
     stroke-linecap: round;
@@ -350,7 +351,7 @@ header {
 
 .chart-placeholder {
     height: 250px;
-    background: linear-gradient(135deg, #f5f7fa, #e8f5e9);
+    background: linear-gradient(135deg, #fafaef, #f5f5e8);
     border-radius: 12px;
     display: flex;
     flex-direction: column;
@@ -363,7 +364,7 @@ header {
 .chart-placeholder svg {
     width: 60px;
     height: 60px;
-    stroke: #66bb6a;
+    stroke: #94a65e;
     fill: none;
     stroke-width: 2;
     stroke-linecap: round;
@@ -388,7 +389,7 @@ header {
 
 .control-section h2 {
     font-size: 1.5em;
-    color: #2e7d32;
+    color: #456028;
     margin-bottom: 25px;
     display: flex;
     align-items: center;
@@ -398,7 +399,7 @@ header {
 .control-section h2 svg {
     width: 28px;
     height: 28px;
-    stroke: #2e7d32;
+    stroke: #456028;
     fill: none;
     stroke-width: 2;
     stroke-linecap: round;
@@ -434,7 +435,7 @@ header {
 .control-header .control-icon {
     width: 40px;
     height: 40px;
-    background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+    background: linear-gradient(135deg, #f5f5e8, #dddda1);
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -445,7 +446,7 @@ header {
 .control-header .control-icon svg {
     width: 22px;
     height: 22px;
-    stroke: #2e7d32;
+    stroke: #456028;
     fill: none;
     stroke-width: 2;
     stroke-linecap: round;
@@ -516,7 +517,7 @@ header {
 }
 
 input:checked + .slider {
-    background-color: #66bb6a;
+    background-color: #94a65e;
 }
 
 input:checked + .slider:before {
@@ -530,7 +531,7 @@ input:checked + .slider:before {
 
 .notifications-section h2 {
     font-size: 1.5em;
-    color: #2e7d32;
+    color: #456028;
     margin-bottom: 25px;
     display: flex;
     align-items: center;
@@ -540,7 +541,7 @@ input:checked + .slider:before {
 .notifications-section h2 svg {
     width: 28px;
     height: 28px;
-    stroke: #2e7d32;
+    stroke: #456028;
     fill: none;
     stroke-width: 2;
     stroke-linecap: round;
@@ -572,7 +573,7 @@ input:checked + .slider:before {
 }
 
 .notification-item.success {
-    border-left-color: #4caf50;
+    border-left-color: #94a65e;
 }
 
 .notification-item.danger {
@@ -598,7 +599,7 @@ input:checked + .slider:before {
 }
 
 .notification-item.success .notif-icon {
-    background-color: #e8f5e9;
+    background-color: #f5f5e8;
 }
 
 .notification-item.danger .notif-icon {
@@ -623,7 +624,7 @@ input:checked + .slider:before {
 }
 
 .notification-item.success .notif-icon svg {
-    stroke: #4caf50;
+    stroke: #94a65e;
 }
 
 .notification-item.danger .notif-icon svg {
