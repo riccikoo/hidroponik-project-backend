@@ -1,6 +1,6 @@
 /* ====================================
-   Landing Page - Hidroponik Smart
-   Modern & Clean Design with SVG Icons
+   Hidroponik Project Landing Page
+   Clean, modern, aesthetic
    ==================================== */
 
 * {
@@ -12,7 +12,7 @@
 body {
     font-family: 'Poppins', sans-serif;
     color: #333;
-    background-color: #f8fdf7;
+    background-color: #fafaef;
     overflow-x: hidden;
 }
 
@@ -33,17 +33,6 @@ nav .logo {
     font-weight: 600;
     font-size: 22px;
     color: #388e3c;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-nav .logo svg {
-    stroke: #388e3c;
-    fill: none;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
 }
 
 nav .logo span {
@@ -201,28 +190,6 @@ nav ul li a.nav-register:hover {
     gap: 10px;
 }
 
-.info-card h3 svg {
-    stroke: #388e3c;
-    fill: none;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    flex-shrink: 0;
-}
-
-/* Special styling for settings icon (filled icon) */
-.info-card h3 svg.icon-settings {
-    fill: #388e3c;
-    stroke: none;
-}
-
-/* Special styling for plant icon (stroke-based) */
-.info-card h3 svg.icon-plant {
-    stroke: #388e3c;
-    fill: none;
-    stroke-width: 1.2;
-}
-
 .info-card ul {
     list-style: none;
     padding-left: 0;
@@ -287,25 +254,9 @@ nav ul li a.nav-register:hover {
     box-shadow: 0 8px 24px rgba(0,0,0,0.15);
 }
 
-.fitur-icon {
+.fitur-box img {
     width: 80px;
-    height: 80px;
-    margin: 0 auto 20px;
-    background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.fitur-icon svg {
-    width: 40px;
-    height: 40px;
-    stroke: #2e7d32;
-    fill: none;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
+    margin-bottom: 15px;
 }
 
 .fitur-box h3 {
@@ -342,36 +293,12 @@ footer {
     margin-bottom: 20px;
     font-size: 1.3em;
     color: #c8e6c9;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.footer-section h4 svg {
-    stroke: #c8e6c9;
-    fill: none;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    flex-shrink: 0;
 }
 
 .footer-section p {
     margin: 10px 0;
     opacity: 0.9;
     line-height: 1.6;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.footer-section p svg {
-    stroke: rgba(255, 255, 255, 0.8);
-    fill: none;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    flex-shrink: 0;
 }
 
 .footer-section a {
