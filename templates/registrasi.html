@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrasi Akun - Hidroponik Smart</title>
+    <link rel="stylesheet" href="static/css/registrasi.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>🌿 Daftar Akun Baru</h1>
+
+        {% if message %}
+            <div class="message">{{ message }}</div>
+        {% endif %}
+
+        <form method="POST">
+            <div class="input-group">
+                <label>Username</label>
+                <input type="text" name="username" required>
+            </div>
+
+            <div class="input-group">
+                <label>Email</label>
+                <input type="email" name="email" required>
+            </div>
+
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" name="password" required>
+            </div>
+
+            <button type="submit">Daftar</button>
+        </form>
+
+        <p class="login-text">
+            Sudah punya akun? <a href="{{ url_for('login') }}">Login di sini</a>
+        </p>
+        <a href="{{ url_for('home') }}" class="link-home">Kembali ke Beranda</a>
+    </div>
+
+</body>
+</html>

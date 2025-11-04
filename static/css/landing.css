@@ -1,0 +1,476 @@
+/* ====================================
+   Landing Page - Hidroponik Smart
+   Modern & Clean Design with SVG Icons
+   ==================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+    background-color: #f8fdf7;
+    overflow-x: hidden;
+}
+
+/* ===== NAVBAR ===== */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 60px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+nav .logo {
+    font-weight: 600;
+    font-size: 22px;
+    color: #388e3c;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+nav .logo svg {
+    stroke: #388e3c;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+nav .logo span {
+    color: #66bb6a;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 25px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #2e7d32;
+    font-weight: 500;
+    transition: all 0.3s;
+    padding: 8px 16px;
+    border-radius: 6px;
+}
+
+nav ul li a:hover {
+    color: #81c784;
+    background-color: #f1f8f4;
+}
+
+nav ul li a.nav-login {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+nav ul li a.nav-login:hover {
+    background-color: #c8e6c9;
+}
+
+nav ul li a.nav-register {
+    background-color: #66bb6a;
+    color: white;
+}
+
+nav ul li a.nav-register:hover {
+    background-color: #4caf50;
+}
+
+/* ===== HERO ===== */
+#hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 80px 60px;
+    background: linear-gradient(135deg, #a8e063, #56ab2f);
+    color: white;
+    flex-wrap: wrap;
+    gap: 40px;
+}
+
+.hero-text {
+    max-width: 500px;
+    animation: fadeInLeft 1s ease;
+}
+
+.hero-text h1 {
+    font-size: 2.8em;
+    margin-bottom: 15px;
+    line-height: 1.2;
+}
+
+.hero-text span {
+    color: #e8f5e9;
+    font-weight: 700;
+}
+
+.hero-text p {
+    font-weight: 300;
+    margin-bottom: 30px;
+    font-size: 1.1em;
+    line-height: 1.6;
+}
+
+.btn-primary {
+    background: white;
+    color: #2e7d32;
+    padding: 14px 32px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s;
+    display: inline-block;
+}
+
+.btn-primary:hover {
+    background: #c8e6c9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.hero-img {
+    animation: fadeInRight 1s ease;
+}
+
+.hero-img img {
+    max-height: 450px;
+    width: auto;
+    max-width: 100%;
+    filter: drop-shadow(0 10px 30px rgba(0,0,0,0.2));
+}
+
+/* ===== TENTANG HIDROPONIK ===== */
+#tentang {
+    padding: 80px 60px;
+    background-color: white;
+    text-align: center;
+}
+
+#tentang h2 {
+    font-size: 2.2em;
+    margin-bottom: 20px;
+    color: #2e7d32;
+}
+
+.tentang-desc {
+    max-width: 800px;
+    margin: 0 auto 50px;
+    line-height: 1.8;
+    font-size: 1.05em;
+    color: #555;
+}
+
+.tentang-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    margin-top: 50px;
+}
+
+.info-card {
+    background: linear-gradient(135deg, #f1f8f4, #e8f5e9);
+    padding: 30px;
+    border-radius: 16px;
+    text-align: left;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(56, 142, 60, 0.15);
+}
+
+.info-card h3 {
+    color: #388e3c;
+    margin-bottom: 20px;
+    font-size: 1.4em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.info-card h3 svg {
+    stroke: #388e3c;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+}
+
+/* Special styling for settings icon (filled icon) */
+.info-card h3 svg.icon-settings {
+    fill: #388e3c;
+    stroke: none;
+}
+
+/* Special styling for plant icon (stroke-based) */
+.info-card h3 svg.icon-plant {
+    stroke: #388e3c;
+    fill: none;
+    stroke-width: 1.2;
+}
+
+.info-card ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.info-card ul li {
+    padding: 10px 0;
+    color: #555;
+    position: relative;
+    padding-left: 28px;
+    line-height: 1.5;
+}
+
+.info-card ul li:before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #66bb6a;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+/* ===== FITUR ===== */
+#fitur {
+    padding: 80px 60px;
+    text-align: center;
+    background-color: #f8fdf7;
+}
+
+#fitur h2 {
+    font-size: 2.2em;
+    margin-bottom: 20px;
+    color: #2e7d32;
+}
+
+.fitur-desc {
+    max-width: 700px;
+    margin: 0 auto 50px;
+    color: #555;
+    font-size: 1.05em;
+    line-height: 1.7;
+}
+
+.fitur-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 40px;
+}
+
+.fitur-box {
+    background: white;
+    border-radius: 16px;
+    padding: 35px;
+    width: 300px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: all 0.3s;
+}
+
+.fitur-box:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+
+.fitur-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fitur-icon svg {
+    width: 40px;
+    height: 40px;
+    stroke: #2e7d32;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.fitur-box h3 {
+    color: #388e3c;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    font-size: 1.3em;
+}
+
+.fitur-box p {
+    color: #666;
+    line-height: 1.7;
+}
+
+/* ===== FOOTER ===== */
+footer {
+    background: #2e7d32;
+    color: white;
+    padding: 60px 60px 20px;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.footer-section {
+    text-align: left;
+}
+
+.footer-section h4 {
+    margin-bottom: 20px;
+    font-size: 1.3em;
+    color: #c8e6c9;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer-section h4 svg {
+    stroke: #c8e6c9;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+}
+
+.footer-section p {
+    margin: 10px 0;
+    opacity: 0.9;
+    line-height: 1.6;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.footer-section p svg {
+    stroke: rgba(255, 255, 255, 0.8);
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+}
+
+.footer-section a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.footer-section a:hover {
+    color: #c8e6c9;
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 30px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    margin-top: 20px;
+}
+
+.footer-bottom p {
+    opacity: 0.8;
+    font-size: 0.95em;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    nav {
+        padding: 15px 30px;
+    }
+
+    nav ul {
+        gap: 15px;
+        font-size: 0.9em;
+    }
+
+    #hero {
+        padding: 50px 30px;
+        text-align: center;
+        justify-content: center;
+    }
+
+    .hero-text {
+        text-align: center;
+    }
+
+    .hero-text h1 {
+        font-size: 2em;
+    }
+
+    .hero-img img {
+        max-height: 350px;
+    }
+
+    #tentang, #fitur {
+        padding: 50px 30px;
+    }
+
+    #tentang h2, #fitur h2 {
+        font-size: 1.8em;
+    }
+
+    .tentang-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .fitur-box {
+        width: 100%;
+        max-width: 350px;
+    }
+
+    footer {
+        padding: 40px 30px 20px;
+    }
+
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+}

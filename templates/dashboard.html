@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Hidroponik Smart</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- ====== SIDEBAR ====== -->
+    <div class="sidebar">
+        <div class="logo">
+            <h2>
+                <svg class="logo-icon" viewBox="0 0 24 24" width="28" height="28">
+                    <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
+                    <polyline points="9 12 11 14 15 10"/>
+                </svg>
+                Hidroponik<span>Smart</span>
+            </h2>
+        </div>
+        <nav>
+            <a href="#overview" class="nav-item active">
+                <span class="icon">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="7" height="7"/>
+                        <rect x="14" y="3" width="7" height="7"/>
+                        <rect x="14" y="14" width="7" height="7"/>
+                        <rect x="3" y="14" width="7" height="7"/>
+                    </svg>
+                </span>
+                <span>Dashboard</span>
+            </a>
+            <a href="#monitoring" class="nav-item">
+                <span class="icon">
+                    <svg viewBox="0 0 24 24">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                    </svg>
+                </span>
+                <span>Monitoring</span>
+            </a>
+            <a href="#control" class="nav-item">
+                <span class="icon">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M12 1v6m0 6v6m6-11h6m-6 6h6M6 7H0m6 6H0"/>
+                    </svg>
+                </span>
+                <span>Kontrol</span>
+            </a>
+            <a href="#history" class="nav-item">
+                <span class="icon">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                </span>
+                <span>Riwayat</span>
+            </a>
+            <a href="#settings" class="nav-item">
+                <span class="icon">
+                    <svg viewBox="0 0 24 24" class="icon-settings">
+                        <path d="M19.9,12.66a1,1,0,0,1,0-1.32L21.18,9.9a1,1,0,0,0,.12-1.17l-2-3.46a1,1,0,0,0-1.07-.48l-1.88.38a1,1,0,0,1-1.15-.66l-.61-1.83A1,1,0,0,0,13.64,2h-4a1,1,0,0,0-1,.68L8.08,4.51a1,1,0,0,1-1.15.66L5,4.79A1,1,0,0,0,4,5.27L2,8.73A1,1,0,0,0,2.1,9.9l1.27,1.44a1,1,0,0,1,0,1.32L2.1,14.1A1,1,0,0,0,2,15.27l2,3.46a1,1,0,0,0,1.07.48l1.88-.38a1,1,0,0,1,1.15.66l.61,1.83a1,1,0,0,0,1,.68h4a1,1,0,0,0,.95-.68l.61-1.83a1,1,0,0,1,1.15-.66l1.88.38a1,1,0,0,0,1.07-.48l2-3.46a1,1,0,0,0-.12-1.17ZM18.41,14l.8.9-1.28,2.22-1.18-.24a3,3,0,0,0-3.45,2L12.92,20H10.36L10,18.86a3,3,0,0,0-3.45-2l-1.18.24L4.07,14.89l.8-.9a3,3,0,0,0,0-4l-.8-.9L5.35,6.89l1.18.24a3,3,0,0,0,3.45-2L10.36,4h2.56l.38,1.14a3,3,0,0,0,3.45,2l1.18-.24,1.28,2.22-.8.9A3,3,0,0,0,18.41,14ZM11.64,8a4,4,0,1,0,4,4A4,4,0,0,0,11.64,8Zm0,6a2,2,0,1,1,2-2A2,2,0,0,1,11.64,14Z"/>
+                    </svg>
+                </span>
+                <span>Pengaturan</span>
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="/" class="logout-btn">
+                <span class="icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+                        <polyline points="16 17 21 12 16 7"/>
+                        <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                </span>
+                <span>Logout</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- ====== MAIN CONTENT ====== -->
+    <div class="main-content">
+
+        <!-- Header -->
+        <header>
+            <div class="header-left">
+                <h1>Dashboard Monitoring</h1>
+                <p>Pemantauan Real-Time Sistem Hidroponik</p>
+            </div>
+            <div class="header-right">
+                <div class="connection-status">
+                    <span class="status-dot active"></span>
+                    <span>ESP32 Connected</span>
+                </div>
+                <div class="user-profile">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    <span>Admin</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- ====== SENSOR CARDS ====== -->
+        <section id="overview" class="sensor-overview">
+            <div class="sensor-card">
+                <div class="sensor-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"/>
+                    </svg>
+                </div>
+                <div class="sensor-info">
+                    <h3>Suhu</h3>
+                    <p class="sensor-value">28.5°C</p>
+                    <span class="sensor-status normal">Normal</span>
+                </div>
+            </div>
+
+            <div class="sensor-card">
+                <div class="sensor-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"/>
+                    </svg>
+                </div>
+                <div class="sensor-info">
+                    <h3>Kelembapan</h3>
+                    <p class="sensor-value">65%</p>
+                    <span class="sensor-status normal">Normal</span>
+                </div>
+            </div>
+
+            <div class="sensor-card">
+                <div class="sensor-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M9 11a3 3 0 106 0"/>
+                        <path d="M9.7 20.7l-3.4-3.4a7.6 7.6 0 010-10.6l3.4-3.4 3.4 3.4a7.6 7.6 0 010 10.6l-3.4 3.4z"/>
+                    </svg>
+                </div>
+                <div class="sensor-info">
+                    <h3>pH Air</h3>
+                    <p class="sensor-value">6.2</p>
+                    <span class="sensor-status normal">Normal</span>
+                </div>
+            </div>
+
+            <div class="sensor-card">
+                <div class="sensor-icon">
+                    <svg viewBox="0 0 24 24">
+                        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                        <polyline points="17 6 23 6 23 12"/>
+                    </svg>
+                </div>
+                <div class="sensor-info">
+                    <h3>EC (Nutrisi)</h3>
+                    <p class="sensor-value">1.8 mS/cm</p>
+                    <span class="sensor-status normal">Normal</span>
+                </div>
+            </div>
+
+            <div class="sensor-card">
+                <div class="sensor-icon">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="5"/>
+                        <line x1="12" y1="1" x2="12" y2="3"/>
+                        <line x1="12" y1="21" x2="12" y2="23"/>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                        <line x1="1" y1="12" x2="3" y2="12"/>
+                        <line x1="21" y1="12" x2="23" y2="12"/>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                    </svg>
+                </div>
+                <div class="sensor-info">
+                    <h3>Cahaya</h3>
+                    <p class="sensor-value">850 lux</p>
+                    <span class="sensor-status normal">Normal</span>
+                </div>
+            </div>
+
+            <div class="sensor-card">
+                <div class="sensor-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"/>
+                        <line x1="12" y1="16" x2="12" y2="20"/>
+                    </svg>
+                </div>
+                <div class="sensor-info">
+                    <h3>Level Air</h3>
+                    <p class="sensor-value">85%</p>
+                    <span class="sensor-status normal">Normal</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====== MONITORING CHARTS ====== -->
+        <section id="monitoring" class="monitoring-section">
+            <h2>
+                <svg viewBox="0 0 24 24">
+                    <line x1="18" y1="20" x2="18" y2="10"/>
+                    <line x1="12" y1="20" x2="12" y2="4"/>
+                    <line x1="6" y1="20" x2="6" y2="14"/>
+                </svg>
+                Monitoring Data Sensor
+            </h2>
+
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <h3>Suhu & Kelembapan (24 Jam)</h3>
+                    <div class="chart-placeholder">
+                        <svg viewBox="0 0 24 24">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                        </svg>
+                        <p>Grafik akan ditampilkan menggunakan Chart.js atau Plotly</p>
+                        <small>Data real-time dari MQTT Broker</small>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <h3>pH Air & EC (24 Jam)</h3>
+                    <div class="chart-placeholder">
+                        <svg viewBox="0 0 24 24">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                        </svg>
+                        <p>Grafik akan ditampilkan menggunakan Chart.js atau Plotly</p>
+                        <small>Data real-time dari MQTT Broker</small>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <h3>Intensitas Cahaya (24 Jam)</h3>
+                    <div class="chart-placeholder">
+                        <svg viewBox="0 0 24 24">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                        </svg>
+                        <p>Grafik akan ditampilkan menggunakan Chart.js atau Plotly</p>
+                        <small>Data real-time dari MQTT Broker</small>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <h3>Level Air (24 Jam)</h3>
+                    <div class="chart-placeholder">
+                        <svg viewBox="0 0 24 24">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                        </svg>
+                        <p>Grafik akan ditampilkan menggunakan Chart.js atau Plotly</p>
+                        <small>Data real-time dari MQTT Broker</small>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====== CONTROL PANEL ====== -->
+        <section id="control" class="control-section">
+            <h2>
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M12 1v6m0 6v6m6-11h6m-6 6h6M6 7H0m6 6H0"/>
+                </svg>
+                Kontrol Manual Aktuator
+            </h2>
+
+            <div class="control-grid">
+                <div class="control-card">
+                    <div class="control-header">
+                        <div>
+                            <div class="control-icon">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3>Pompa Air</h3>
+                                <p>Sirkulasi nutrisi</p>
+                            </div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="pompaAir">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="control-status">
+                        <span class="status-text">Status: <strong>OFF</strong></span>
+                    </div>
+                </div>
+
+                <div class="control-card">
+                    <div class="control-header">
+                        <div>
+                            <div class="control-icon">
+                                <svg viewBox="0 0 24 24">
+                                    <polyline points="18 15 12 9 6 15"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3>Pompa pH Up</h3>
+                                <p>Naikkan pH larutan</p>
+                            </div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="pompaPhUp">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="control-status">
+                        <span class="status-text">Status: <strong>OFF</strong></span>
+                    </div>
+                </div>
+
+                <div class="control-card">
+                    <div class="control-header">
+                        <div>
+                            <div class="control-icon">
+                                <svg viewBox="0 0 24 24">
+                                    <polyline points="6 9 12 15 18 9"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3>Pompa pH Down</h3>
+                                <p>Turunkan pH larutan</p>
+                            </div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="pompaPhDown">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="control-status">
+                        <span class="status-text">Status: <strong>OFF</strong></span>
+                    </div>
+                </div>
+
+                <div class="control-card">
+                    <div class="control-header">
+                        <div>
+                            <div class="control-icon">
+                                <svg viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="5"/>
+                                    <line x1="12" y1="1" x2="12" y2="3"/>
+                                    <line x1="12" y1="21" x2="12" y2="23"/>
+                                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                                    <line x1="1" y1="12" x2="3" y2="12"/>
+                                    <line x1="21" y1="12" x2="23" y2="12"/>
+                                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3>LED Grow Light</h3>
+                                <p>Pencahayaan tambahan</p>
+                            </div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="ledGrow">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="control-status">
+                        <span class="status-text">Status: <strong>OFF</strong></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====== NOTIFICATIONS ====== -->
+        <section class="notifications-section">
+            <h2>
+                <svg viewBox="0 0 24 24">
+                    <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                    <path d="M13.73 21a2 2 0 01-3.46 0"/>
+                </svg>
+                Notifikasi & Alert
+            </h2>
+            <div class="notification-list">
+                <div class="notification-item info">
+                    <span class="notif-icon">
+                        <svg viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="16" x2="12" y2="12"/>
+                            <line x1="12" y1="8" x2="12.01" y2="8"/>
+                        </svg>
+                    </span>
+                    <div class="notif-content">
+                        <strong>Sistem Normal</strong>
+                        <p>Semua sensor bekerja dengan baik</p>
+                        <small>2 menit yang lalu</small>
+                    </div>
+                </div>
+
+                <div class="notification-item warning">
+                    <span class="notif-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                            <line x1="12" y1="9" x2="12" y2="13"/>
+                            <line x1="12" y1="17" x2="12.01" y2="17"/>
+                        </svg>
+                    </span>
+                    <div class="notif-content">
+                        <strong>pH Mendekati Batas</strong>
+                        <p>pH saat ini 6.2, mendekati batas minimum</p>
+                        <small>15 menit yang lalu</small>
+                    </div>
+                </div>
+
+                <div class="notification-item success">
+                    <span class="notif-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                            <polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                    </span>
+                    <div class="notif-content">
+                        <strong>Pompa Air Aktif</strong>
+                        <p>Pompa air berhasil diaktifkan secara otomatis</p>
+                        <small>1 jam yang lalu</small>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        // Toggle switch functionality
+        document.querySelectorAll('.toggle-switch input').forEach(toggle => {
+            toggle.addEventListener('change', function() {
+                const card = this.closest('.control-card');
+                const statusText = card.querySelector('.status-text strong');
+
+                if (this.checked) {
+                    statusText.textContent = 'ON';
+                    statusText.style.color = '#66bb6a';
+                } else {
+                    statusText.textContent = 'OFF';
+                    statusText.style.color = '#999';
+                }
+
+                // TODO: Kirim perintah ke MQTT broker
+                console.log(`${this.id} is ${this.checked ? 'ON' : 'OFF'}`);
+            });
+        });
+
+        // Sidebar navigation active state
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // TODO: Implementasi real-time data menggunakan MQTT/WebSocket
+        // TODO: Implementasi Chart.js untuk grafik monitoring
+    </script>
+
+</body>
+</html>
