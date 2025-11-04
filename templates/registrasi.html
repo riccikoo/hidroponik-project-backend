@@ -4,41 +4,87 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrasi Akun - Hidroponik Smart</title>
-    <link rel="stylesheet" href="static/css/registrasi.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/registrasi.css') }}">
 </head>
 <body>
 
     <div class="container">
         <h1>🌿 Daftar Akun Baru</h1>
 
-        {% if message %}
-            <div class="message">{{ message }}</div>
-        {% endif %}
+        <div id="message"></div>
 
-        <form method="POST">
+        <form id="registerForm">
             <div class="input-group">
-                <label>Username</label>
-                <input type="text" name="username" required>
+                <label>Nama Lengkap</label>
+                <input type="text" id="name" name="name" required>
             </div>
 
             <div class="input-group">
                 <label>Email</label>
-                <input type="email" name="email" required>
+                <input type="email" id="email" name="email" required>
             </div>
 
             <div class="input-group">
                 <label>Password</label>
-                <input type="password" name="password" required>
+                <input type="password" id="password" name="password" required>
             </div>
 
             <button type="submit">Daftar</button>
         </form>
 
         <p class="login-text">
-            Sudah punya akun? <a href="{{ url_for('login') }}">Login di sini</a>
+            Sudah punya akun? <a href="{{ url_for('web_bp.login_page') }}">Login di sini</a>
         </p>
-        <a href="{{ url_for('home') }}" class="link-home">Kembali ke Beranda</a>
+        <a href="{{ url_for('web_bp.landing_page') }}" class="link-home">Kembali ke Beranda</a>
     </div>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+
+            const messageDiv = document.getElementById('message');
+            messageDiv.innerHTML = "⏳ Mengirim data...";
+
+            try {
+                const response = await fetch('http://localhost:5000/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: document.getElementById('name').value,
+                        email: document.getElementById('email').value,
+                        password: document.getElementById('password').value,
+                        password_confirmation: document.getElementById('password').value,
+                        // role : 'user',
+                        // status : 'active',
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.status) {
+                    messageDiv.style.color = "green";
+                    messageDiv.innerHTML = "✅ " + result.message;
+                    // Redirect ke login page setelah 2 detik
+                    setTimeout(() => {
+                        window.location.href = "{{ url_for('web_bp.login_page') }}";
+                    }, 2000);
+                } else {
+                    messageDiv.style.color = "red";
+                    messageDiv.innerHTML = "❌ " + (result.message || "Terjadi kesalahan");
+                }
+            } catch (error) {
+                messageDiv.style.color = "red";
+                messageDiv.innerHTML = "⚠️ Gagal menghubungi server.";
+                console.error(error);
+            }
+        });
+    </script>
 
 </body>
 </html>
