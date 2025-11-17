@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Splash Screen</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/splash.css') }}">
+
+    <script>
+        // Redirect setelah 5 detik
+        setTimeout(() => {
+            window.location.href = "/landing";
+        }, 5000);
+    </script>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="grid-box">
+        <!-- 16 kotak -->
+        <div class="box b1"></div><div class="box b2"></div><div class="box b3"></div><div class="box b4"></div>
+        <div class="box b5"></div><div class="box b6"></div><div class="box b7"></div><div class="box b8"></div>
+        <div class="box b9"></div><div class="box b10"></div><div class="box b11"></div><div class="box b12"></div>
+        <div class="box b13"></div><div class="box b14"></div><div class="box b15"></div><div class="box b16"></div>
+    </div>
+
+    <div class="splash-container">
+        <div class="logo-circle">
+        <span class="logo-text">H2O</span>
+        </div>
+
+
+        <h1 class="title">Smart Hydroponic</h1>
+        <p class="subtitle">Monitoring • Automation • Real‑time Sensors</p>
+
+
+        <div class="loader"></div>
+    </div>
+
+
+    <p class="version">Version 1.0.0</p>
+</div>
+
+</body>
+</html>
