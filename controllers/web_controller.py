@@ -110,3 +110,6 @@ def dashboard_page():
 def logout():
     session.clear()
     return redirect(url_for('web_bp.login_page'))
+
+def splash_page():
+    return render_template('splash.html')

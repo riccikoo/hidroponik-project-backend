@@ -1,0 +1,94 @@
+body {
+    margin: 0;
+    background: #eef2e3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+    color: #2e4e22;
+}
+
+.container {
+    text-align: center;
+}
+
+/* GRID KOTAK */
+.grid-box {
+    width: 180px;
+    height: 180px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+    margin: 0 auto 20px auto;
+}
+
+.box {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    opacity: 0.85;
+}
+
+/* warna kotak */
+.b1 { background: #6f8f59; }
+.b2 { background: #d5dfc2; }
+.b3 { background: #8ead6f; }
+.b4 { background: #c1d1a1; }
+
+.b5 { background: #d8e3cb; }
+.b6 { background: #6c8b55; }
+.b7 { background: #e8efd7; }
+.b8 { background: #a3bb82; }
+
+.b9 { background: #9eb87a; }
+.b10 { background: #d2ddc1; }
+.b11 { background: #7fa361; }
+.b12 { background: #e6efd4; }
+
+.b13 { background: #b7c99d; }
+.b14 { background: #e5eed0; }
+.b15 { background: #94ab71; }
+.b16 { background: #d9e4c9; }
+
+/* TEKS */
+.title {
+    font-size: 36px;
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+.title span {
+    color: #5c8f31;
+}
+
+.subtitle {
+    margin-top: -5px;
+    font-size: 14px;
+    color: #4f6e3b;
+    opacity: 0.7;
+}
+
+/* LOADING ANIMATION */
+.loader {
+    border: 4px solid #cfe3b3;
+    border-top: 4px solid #5c8f31;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    margin: 20px auto;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* VERSION */
+.version {
+    margin-top: 20px;
+    font-size: 12px;
+    opacity: 0.5;
+}
+
