@@ -1,6 +1,7 @@
 from flask import jsonify, request
 from extensions import db, bcrypt
 from models.user_model import User
+from models.sensor_model import Sensor
 from datetime import datetime
 from validations.user_schema import validate_register, validate_login
 from flask_jwt_extended import create_access_token
@@ -17,9 +18,9 @@ def register():
         name=data['name'],
         email=data['email'],
         password=hashed_pw,
-        role='user',              # default role user
-        status='inactive',          # default status active
-        timestamp=datetime.utcnow()  # waktu pembuatan akun
+        role='user',       
+        status='inactive',        
+        timestamp=datetime.utcnow()
     )
 
     db.session.add(user)
@@ -40,7 +41,6 @@ def register():
 
 
 def login():
-    # 1. Validate incoming data (assuming validate_login handles this)
     errors = validate_login(request.json)
     if errors:
         return jsonify({"status": False, "errors": errors}), 422
@@ -48,28 +48,19 @@ def login():
     data = request.json
     user = User.query.filter_by(email=data['email']).first()
 
-    # --- 1. Email Check ---
     if not user:
-        # It's better security practice to give a generic failure message
-        # to avoid letting attackers guess valid emails.
         return jsonify({"status": False, "message": "Invalid credentials"}), 401
 
-    # --- 2. Status Check (THE NEW REQUIREMENT) ---
     if user.status != 'active':
-        # Block login if status is 'inactive'
         return jsonify({"status": False, "message": "Account is currently inactive. Please contact support."}), 403 # Use 403 Forbidden
 
-    # --- 3. Password Check ---
     if not bcrypt.check_password_hash(user.password, data['password']):
         return jsonify({"status": False, "message": "Invalid credentials"}), 401
 
-    # --- SUCCESS ---
-    # Generate token only if all checks pass
     access_token = create_access_token(identity=user.id)
     return jsonify({
         "status": True,
         "message": "Login successful",
-        # 🔑 CRITICAL: Make sure 'token' is present and holds the access_token value
         "token": access_token, 
         "user": {
             "id": user.id, 
@@ -80,4 +71,31 @@ def login():
             # Ensure timestamp is serialized
             "timestamp": user.timestamp if isinstance(user.timestamp, str) else (user.timestamp.isoformat() if user.timestamp else None)
         }
+    }), 200
+
+def get_sensor_data():
+    sensor_name = request.args.get('name', None)
+    limit = request.args.get('limit', 50, type=int)
+
+    query = Sensor.query
+
+    if sensor_name:
+        query = query.filter_by(sensor_name=sensor_name)
+
+    data = query.order_by(Sensor.timestamp.desc()).limit(limit).all()
+
+    result = []
+    for row in data:
+        result.append({
+            "id": row.id,
+            "sensor_name": row.sensor_name,
+            "value": float(row.value),
+            "timestamp": row.timestamp.isoformat()
+        })
+
+    return jsonify({
+        "status": True,
+        "sensor": sensor_name,
+        "data_count": len(result),
+        "data": result[::-1]
     }), 200

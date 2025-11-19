@@ -176,9 +176,9 @@ nav ul {
 }
 
 .hero-img img {
-    width: 100%;
-    max-width: 500px;
-    filter: drop-shadow(0 10px 30px rgba(0,0,0,0.3));
+    width: 150%;
+    max-width: 700px;
+    filter: drop-shadow(0 10px 50px rgba(0,0,0,0.3));
 }
 
 /* ====== TENTANG SECTION ====== */
