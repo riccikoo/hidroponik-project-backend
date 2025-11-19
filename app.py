@@ -1,8 +1,9 @@
 from flask import Flask
 from flask_migrate import Migrate
 from extensions import db, bcrypt
-from routes.mobile_routes import auth_bp
+from routes.mobile_routes import mobile_bp
 from routes.web_routes import web_bp
+from dummy import test_bp
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 
@@ -29,8 +30,9 @@ def create_app():
     # Aktifkan CORS untuk semua route
     CORS(app, supports_credentials=True)
     # Register blueprint
-    app.register_blueprint(auth_bp, url_prefix="/api")
+    app.register_blueprint(mobile_bp, url_prefix="/api")
     app.register_blueprint(web_bp, url_prefix="/")
+    app.register_blueprint(test_bp, url_prefix="/api")
 
     # JWT
     app.config["JWT_SECRET_KEY"] = "super-secret-key-replace-with-env-var"
