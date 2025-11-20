@@ -5,6 +5,7 @@ from routes.mobile_routes import mobile_bp
 from routes.web_routes import web_bp
 from dummy import test_bp
 from flask_cors import CORS
+from mqtt.mqtt_client import init_mqtt
 from flask_jwt_extended import JWTManager
 
 def create_app():
@@ -26,6 +27,8 @@ def create_app():
     db.init_app(app)
     bcrypt.init_app(app)
     Migrate(app, db)
+    
+    init_mqtt() 
 
     # Aktifkan CORS untuk semua route
     CORS(app, supports_credentials=True)
