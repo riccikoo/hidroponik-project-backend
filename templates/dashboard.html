@@ -10,14 +10,14 @@
 </head>
 <body>
 
-    <!-- ====== SIDEBAR ====== -->
+       <!-- ====== SIDEBAR ====== -->
     <div class="sidebar">
         <div class="logo">
             <img src="{{ url_for('static', filename='img/logo-putih.png') }}" alt="HydroGrow Logo" class="logo-img">
             <h2>HydroGrow</h2>
         </div>
         <nav>
-            <a href="#overview" class="nav-item active">
+            <a href="/dashboard" class="nav-item active">
                 <span class="icon">
                     <svg viewBox="0 0 24 24">
                         <rect x="3" y="3" width="7" height="7"/>
@@ -28,7 +28,7 @@
                 </span>
                 <span>Dashboard</span>
             </a>
-            <a href="#history" class="nav-item">
+            <a href="/riwayat" class="nav-item">
                 <span class="icon">
                     <svg viewBox="0 0 24 24">
                         <circle cx="12" cy="12" r="10"/>
@@ -37,7 +37,7 @@
                 </span>
                 <span>Riwayat</span>
             </a>
-            <a href="#monitoring" class="nav-item">
+            <a href="/profile" class="nav-item">
                 <span class="icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="8" r="4"/>
@@ -75,13 +75,15 @@
                     <span class="status-dot active"></span>
                     <span>ESP32 Connected</span>
                 </div>
-                <div class="user-profile">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
-                        <circle cx="12" cy="7" r="4"/>
-                    </svg>
-                    <span>Halo, {{ user_name }}!</span>
-                </div>
+                <a href="/profile" style="text-decoration: none; color: inherit;">
+                    <div class="user-profile">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        <span>Halo, {{ user_name }}!</span>
+                    </div>
+                </a>
             </div>
         </header>
 
@@ -235,62 +237,6 @@
             </div>
         </section>
 
-        <!-- ====== NOTIFICATIONS ====== -->
-        <section class="notifications-section">
-            <h2>
-                <svg viewBox="0 0 24 24">
-                    <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-                    <path d="M13.73 21a2 2 0 01-3.46 0"/>
-                </svg>
-                Notifikasi & Alert
-            </h2>
-            <div class="notification-list">
-                <div class="notification-item info">
-                    <span class="notif-icon">
-                        <svg viewBox="0 0 24 24">
-                            <circle cx="12" cy="12" r="10"/>
-                            <line x1="12" y1="16" x2="12" y2="12"/>
-                            <line x1="12" y1="8" x2="12.01" y2="8"/>
-                        </svg>
-                    </span>
-                    <div class="notif-content">
-                        <strong>Sistem Normal</strong>
-                        <p>Semua sensor bekerja dengan baik</p>
-                        <small>2 menit yang lalu</small>
-                    </div>
-                </div>
-
-                <div class="notification-item warning">
-                    <span class="notif-icon">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
-                            <line x1="12" y1="9" x2="12" y2="13"/>
-                            <line x1="12" y1="17" x2="12.01" y2="17"/>
-                        </svg>
-                    </span>
-                    <div class="notif-content">
-                        <strong>pH Mendekati Batas</strong>
-                        <p>pH saat ini 6.2, mendekati batas minimum</p>
-                        <small>15 menit yang lalu</small>
-                    </div>
-                </div>
-
-                <div class="notification-item success">
-                    <span class="notif-icon">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
-                            <polyline points="22 4 12 14.01 9 11.01"/>
-                        </svg>
-                    </span>
-                    <div class="notif-content">
-                        <strong>Pompa Air Aktif</strong>
-                        <p>Pompa air berhasil diaktifkan secara otomatis</p>
-                        <small>1 jam yang lalu</small>
-                    </div>
-                </div>
-            </div>
-        </section>
-
     </div>
 
     <script>
@@ -314,11 +260,19 @@
         });
 
         // Sidebar navigation active state
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', function(e) {
-                e.preventDefault();
-                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-                this.classList.add('active');
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPath = window.location.pathname;
+
+            document.querySelectorAll('.nav-item').forEach(item => {
+                const href = item.getAttribute('href');
+
+                // Remove active class from all
+                item.classList.remove('active');
+
+                // Add active class to current page
+                if (href === currentPath) {
+                    item.classList.add('active');
+                }
             });
         });
 

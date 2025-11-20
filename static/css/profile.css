@@ -1,0 +1,450 @@
+/* ====================================
+   Profile Page Styles - HydroGrow
+   ==================================== */
+
+.profile-section {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+/* ===== PROFILE CARD ===== */
+.profile-card {
+    background: linear-gradient(135deg, #456028, #5a7a35);
+    color: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(69, 96, 40, 0.2);
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    flex-shrink: 0;
+}
+
+.profile-avatar svg {
+    width: 50px;
+    height: 50px;
+    stroke: white;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.profile-info {
+    flex: 1;
+}
+
+.profile-info h2 {
+    font-size: 2em;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+.profile-role {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.9;
+    font-size: 1em;
+}
+
+.profile-role svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+}
+
+.btn-edit-avatar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    padding: 12px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-edit-avatar:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+.btn-edit-avatar svg {
+    width: 20px;
+    height: 20px;
+    stroke: white;
+    fill: none;
+    stroke-width: 2;
+}
+
+.profile-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    padding-top: 25px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.stat-item svg {
+    width: 40px;
+    height: 40px;
+    stroke: #dddda1;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+}
+
+.stat-item strong {
+    display: block;
+    font-size: 1.5em;
+    margin-bottom: 3px;
+}
+
+.stat-item p {
+    font-size: 0.9em;
+    opacity: 0.8;
+}
+
+/* ===== INFO CARD ===== */
+.info-card {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.card-header h3 {
+    font-size: 1.3em;
+    color: #456028;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.card-header h3 svg {
+    width: 24px;
+    height: 24px;
+    stroke: #456028;
+    fill: none;
+    stroke-width: 2;
+}
+
+.btn-edit {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background-color: #f5f5e8;
+    color: #456028;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-edit:hover {
+    background-color: #dddda1;
+    transform: translateY(-2px);
+}
+
+.btn-edit svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+}
+
+/* ===== INFO GRID ===== */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+}
+
+.info-item label {
+    display: block;
+    font-size: 0.85em;
+    color: #999;
+    margin-bottom: 8px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-item p {
+    font-size: 1.1em;
+    color: #333;
+    font-weight: 600;
+}
+
+/* ===== SETTINGS LIST ===== */
+.settings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #fafaef;
+    border-radius: 12px;
+    transition: all 0.3s;
+}
+
+.setting-item:hover {
+    background-color: #f5f5e8;
+}
+
+.setting-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex: 1;
+}
+
+.setting-info svg {
+    width: 24px;
+    height: 24px;
+    stroke: #456028;
+    fill: none;
+    stroke-width: 2;
+    flex-shrink: 0;
+}
+
+.setting-info strong {
+    display: block;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.setting-info p {
+    font-size: 0.9em;
+    color: #666;
+}
+
+/* ===== DEVICE GRID ===== */
+.device-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.device-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    background-color: #fafaef;
+    border-radius: 12px;
+}
+
+.device-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #f5f5e8, #dddda1);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.device-icon svg {
+    width: 26px;
+    height: 26px;
+    stroke: #456028;
+    fill: none;
+    stroke-width: 2;
+}
+
+.device-item label {
+    display: block;
+    font-size: 0.8em;
+    color: #999;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.device-item p {
+    font-size: 1em;
+    color: #333;
+    font-weight: 600;
+}
+
+/* ===== ACTION BUTTONS ===== */
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.action-buttons button {
+    flex: 1;
+    min-width: 200px;
+    padding: 15px 25px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.action-buttons button svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+}
+
+.btn-secondary {
+    background-color: #f5f5e8;
+    color: #456028;
+}
+
+.btn-secondary:hover {
+    background-color: #dddda1;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.btn-danger {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.btn-danger:hover {
+    background-color: #ef5350;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(198, 40, 40, 0.3);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .profile-card {
+        padding: 25px;
+    }
+
+    .profile-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .profile-avatar {
+        width: 80px;
+        height: 80px;
+    }
+
+    .profile-avatar svg {
+        width: 40px;
+        height: 40px;
+    }
+
+    .profile-info h2 {
+        font-size: 1.5em;
+    }
+
+    .btn-edit-avatar {
+        position: static;
+        margin-top: 15px;
+    }
+
+    .profile-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .device-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .action-buttons button {
+        min-width: 100%;
+    }
+
+    .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .btn-edit {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+.user-profile {
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.user-profile:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
