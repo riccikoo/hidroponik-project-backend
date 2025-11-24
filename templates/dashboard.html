@@ -237,7 +237,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-gradient@1.0.0"></script>
 
-    <script>
+<script>
 
     let sensorCache = {};
     let lastFetchTime = 0;
@@ -327,21 +327,6 @@
         });
     }
 
-        // Sidebar navigation active state
-        document.addEventListener('DOMContentLoaded', function() {
-            const currentPath = window.location.pathname;
-
-            document.querySelectorAll('.nav-item').forEach(item => {
-                const href = item.getAttribute('href');
-
-                // Remove active class from all
-                item.classList.remove('active');
-
-                // Add active class to current page
-                if (href === currentPath) {
-                    item.classList.add('active');
-                }
-            });
     /* =========================================================
        DUAL LINE CHART (Suhu+Humid / pH+EC)
     ========================================================= */

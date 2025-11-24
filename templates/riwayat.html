@@ -343,23 +343,24 @@
                             <tr>
                                 <td>
                                     <div class="time-cell">
-                                        <strong>{{ data.created_at.strftime('%d %b %Y') }}</strong>
-                                        <span>{{ data.created_at.strftime('%H:%M:%S') }}</span>
+                                        <strong>{{ data.timestamp.strftime('%d %b %Y') }}</strong>
+                                        <span>{{ data.timestamp.strftime('%H:%M:%S') }}</span>
                                     </div>
                                 </td>
-                                <td>{{ data.suhu }}°C</td>
-                                <td>{{ data.kelembapan }}%</td>
-                                <td>{{ data.ph }}</td>
-                                <td>{{ data.ec }}</td>
-                                <td>{{ data.cahaya }} lux</td>
-                                <td>{{ data.level_air }}%</td>
                                 <td>
-                                    {% if data.suhu > 30 or data.ph < 6 or data.ph > 7 %}
-                                    <span class="badge danger">Bahaya</span>
-                                    {% elif data.suhu > 28 or data.ph < 6.2 %}
-                                    <span class="badge warning">Warning</span>
+                                    {% set suhu = data.suhu or 0 %}
+                                    {% set ph = data.ph or 7 %}
+                                    {% set ec_val = data.ec or 0 %}
+                                    {% set kelembapan = data.kelembapan or 0 %}
+                                    {% set cahaya = data.cahaya or 0 %}
+                                    {% set level_air = data.level_air or 0 %}
+
+                                    {% if suhu > 30 or ph < 6 or ph > 7 %}
+                                        <span class="badge danger">Bahaya</span>
+                                    {% elif suhu > 28 or ph < 6.2 %}
+                                        <span class="badge warning">Warning</span>
                                     {% else %}
-                                    <span class="badge normal">Normal</span>
+                                        <span class="badge normal">Normal</span>
                                     {% endif %}
                                 </td>
                             </tr>
