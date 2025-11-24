@@ -7,6 +7,8 @@
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/logo-putih.png') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-gradient@1.0.0"></script>
 </head>
 <body>
 
@@ -48,7 +50,7 @@
             </a>
         </nav>
         <div class="sidebar-footer">
-            <a href="/" class="logout-btn">
+            <a href="/logout" class="logout-btn">
                 <span class="icon">
                     <svg viewBox="0 0 24 24">
                         <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
@@ -89,95 +91,112 @@
 
         <!-- ====== SENSOR CARDS ====== -->
         <section id="overview" class="sensor-overview">
-            <div class="sensor-card">
-                <div class="sensor-icon">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"/>
-                    </svg>
-                </div>
-                <div class="sensor-info">
-                    <h3>Suhu</h3>
-                    <p class="sensor-value">28.5°C</p>
-                    <span class="sensor-status normal">Normal</span>
-                </div>
-            </div>
 
-            <div class="sensor-card">
-                <div class="sensor-icon">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"/>
-                    </svg>
-                </div>
-                <div class="sensor-info">
-                    <h3>Kelembapan</h3>
-                    <p class="sensor-value">65%</p>
-                    <span class="sensor-status normal">Normal</span>
-                </div>
+        <!-- Suhu -->
+        <div class="sensor-card">
+            <div class="sensor-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"/>
+                </svg>
             </div>
+            <div class="sensor-info">
+                <h3>Suhu</h3>
+                <p id="val-temp" class="sensor-value">
+                    {{ sensors['dht_temp'][0].value if sensors['dht_temp'] else '-' }}°C
+                </p>
+                <span class="sensor-status normal">Normal</span>
+            </div>
+        </div>
 
-            <div class="sensor-card">
-                <div class="sensor-icon">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M9 11a3 3 0 106 0"/>
-                        <path d="M9.7 20.7l-3.4-3.4a7.6 7.6 0 010-10.6l3.4-3.4 3.4 3.4a7.6 7.6 0 010 10.6l-3.4 3.4z"/>
-                    </svg>
-                </div>
-                <div class="sensor-info">
-                    <h3>pH Air</h3>
-                    <p class="sensor-value">6.2</p>
-                    <span class="sensor-status normal">Normal</span>
-                </div>
+        <!-- Kelembapan -->
+        <div class="sensor-card">
+            <div class="sensor-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"/>
+                </svg>
             </div>
+            <div class="sensor-info">
+                <h3>Kelembapan</h3>
+                <p id="val-humid" class="sensor-value">
+                    {{ sensors['dht_humid'][0].value if sensors['dht_humid'] else '-' }}%
+                </p>
+                <span class="sensor-status normal">Normal</span>
+            </div>
+        </div>
 
-            <div class="sensor-card">
-                <div class="sensor-icon">
-                    <svg viewBox="0 0 24 24">
-                        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
-                        <polyline points="17 6 23 6 23 12"/>
-                    </svg>
-                </div>
-                <div class="sensor-info">
-                    <h3>EC (Nutrisi)</h3>
-                    <p class="sensor-value">1.8 mS/cm</p>
-                    <span class="sensor-status normal">Normal</span>
-                </div>
+        <!-- pH -->
+        <div class="sensor-card">
+            <div class="sensor-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M9 11a3 3 0 106 0"/>
+                    <path d="M9.7 20.7l-3.4-3.4a7.6 7.6 0 010-10.6l3.4-3.4 3.4 3.4a7.6 7.6 0 010 10.6l-3.4 3.4z"/>
+                </svg>
             </div>
+            <div class="sensor-info">
+                <h3>pH Air</h3>
+                <p id="val-ph" class="sensor-value">
+                    {{ sensors['ph'][0].value if sensors['ph'] else '-' }}
+                </p>
+                <span class="sensor-status normal">Normal</span>
+            </div>
+        </div>
 
-            <div class="sensor-card">
-                <div class="sensor-icon">
-                    <svg viewBox="0 0 24 24">
-                        <circle cx="12" cy="12" r="5"/>
-                        <line x1="12" y1="1" x2="12" y2="3"/>
-                        <line x1="12" y1="21" x2="12" y2="23"/>
-                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-                        <line x1="1" y1="12" x2="3" y2="12"/>
-                        <line x1="21" y1="12" x2="23" y2="12"/>
-                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-                    </svg>
-                </div>
-                <div class="sensor-info">
-                    <h3>Cahaya</h3>
-                    <p class="sensor-value">850 lux</p>
-                    <span class="sensor-status normal">Normal</span>
-                </div>
+        <!-- EC -->
+        <div class="sensor-card">
+            <div class="sensor-icon">
+                <svg viewBox="0 0 24 24">
+                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                    <polyline points="17 6 23 6 23 12"/>
+                </svg>
             </div>
+            <div class="sensor-info">
+                <h3>EC (Nutrisi)</h3>
+                <p id="val-ec" class="sensor-value">
+                    {{ sensors['ec'][0].value if sensors['ec'] else '-' }} mS/cm
+                </p>
+                <span class="sensor-status normal">Normal</span>
+            </div>
+        </div>
 
-            <div class="sensor-card">
-                <div class="sensor-icon">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"/>
-                        <line x1="12" y1="16" x2="12" y2="20"/>
-                    </svg>
-                </div>
-                <div class="sensor-info">
-                    <h3>Level Air</h3>
-                    <p class="sensor-value">85%</p>
-                    <span class="sensor-status normal">Normal</span>
-                </div>
+        <!-- Cahaya -->
+        <div class="sensor-card">
+            <div class="sensor-icon">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="5"/>
+                    <line x1="12" y1="1" x2="12" y2="3"/>
+                    <line x1="12" y1="21" x2="12" y2="23"/>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                </svg>
             </div>
-        </section>
+            <div class="sensor-info">
+                <h3>Cahaya</h3>
+                <p id="val-ldr" class="sensor-value">
+                    {{ sensors['ldr'][0].value if sensors['ldr'] else '-' }} lux
+                </p>
+                <span class="sensor-status normal">Normal</span>
+            </div>
+        </div>
+
+        <!-- Ultrasonic -->
+        <div class="sensor-card">
+            <div class="sensor-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"/>
+                    <line x1="12" y1="16" x2="12" y2="20"/>
+                </svg>
+            </div>
+            <div class="sensor-info">
+                <h3>Level Air</h3>
+                <p id="val-ultra" class="sensor-value">
+                    {{ sensors['ultrasonic'][0].value if sensors['ultrasonic'] else '-' }}%
+                </p>
+                <span class="sensor-status normal">Normal</span>
+            </div>
+        </div>
+
+    </section>
+
 
         <!-- ====== MONITORING CHARTS ====== -->
         <section id="monitoring" class="monitoring-section">
@@ -193,71 +212,120 @@
             <div class="charts-grid">
                 <div class="chart-container">
                     <h3>Suhu & Kelembapan (24 Jam)</h3>
-                    <div class="chart-placeholder">
-                        <svg viewBox="0 0 24 24">
-                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-                        </svg>
-                        <p>Grafik akan ditampilkan menggunakan Chart.js atau Plotly</p>
-                        <small>Data real-time dari MQTT Broker</small>
-                    </div>
+                    <canvas id="chartTempHumid"></canvas>
                 </div>
 
                 <div class="chart-container">
                     <h3>pH Air & EC (24 Jam)</h3>
-                    <div class="chart-placeholder">
-                        <svg viewBox="0 0 24 24">
-                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-                        </svg>
-                        <p>Grafik akan ditampilkan menggunakan Chart.js atau Plotly</p>
-                        <small>Data real-time dari MQTT Broker</small>
-                    </div>
+                    <canvas id="chartPhEc"></canvas>
                 </div>
 
                 <div class="chart-container">
                     <h3>Intensitas Cahaya (24 Jam)</h3>
-                    <div class="chart-placeholder">
-                        <svg viewBox="0 0 24 24">
-                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-                        </svg>
-                        <p>Grafik akan ditampilkan menggunakan Chart.js atau Plotly</p>
-                        <small>Data real-time dari MQTT Broker</small>
-                    </div>
+                    <canvas id="chartLdr"></canvas>
                 </div>
 
                 <div class="chart-container">
                     <h3>Level Air (24 Jam)</h3>
-                    <div class="chart-placeholder">
-                        <svg viewBox="0 0 24 24">
-                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-                        </svg>
-                        <p>Grafik akan ditampilkan menggunakan Chart.js atau Plotly</p>
-                        <small>Data real-time dari MQTT Broker</small>
-                    </div>
+                    <canvas id="chartUltrasonic"></canvas>
                 </div>
+
             </div>
         </section>
 
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-gradient@1.0.0"></script>
 
     <script>
-        // Toggle switch functionality
-        document.querySelectorAll('.toggle-switch input').forEach(toggle => {
-            toggle.addEventListener('change', function() {
-                const card = this.closest('.control-card');
-                const statusText = card.querySelector('.status-text strong');
 
-                if (this.checked) {
-                    statusText.textContent = 'ON';
-                    statusText.style.color = '#66bb6a';
-                } else {
-                    statusText.textContent = 'OFF';
-                    statusText.style.color = '#999';
-                }
+    let sensorCache = {};
+    let lastFetchTime = 0;
 
-                // TODO: Kirim perintah ke MQTT broker
-                console.log(`${this.id} is ${this.checked ? 'ON' : 'OFF'}`);
-            });
+    async function getSensorData(name, limit = 20) {
+        const now = Date.now();
+
+        // CACHE VALID 1 SETIAP 2.5 DETIK
+        if (sensorCache[name] && (now - lastFetchTime < 2500)) {
+            return sensorCache[name];
+        }
+
+        const res = await fetch(`/api/get_sensor_data?name=${name}&limit=${limit}`);
+        const json = await res.json();
+
+        sensorCache[name] = json.data;
+        lastFetchTime = now;  // <-- TEMPAT YANG BENAR
+
+        return json.data;
+    }
+
+
+    function formatTime(ts) {
+        return new Date(ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    /* =========================================================
+       TEMPLATE CHART MODERN + TOOLTIP + SMOOTH HOVER
+    ========================================================= */
+    function tooltipConfig() {
+        return {
+            enabled: true,
+            backgroundColor: "rgba(0,0,0,0.75)",
+            titleColor: "#fff",
+            bodyColor: "#fff",
+            displayColors: false,
+            padding: 10,
+            titleFont: { size: 12, weight: "bold" },
+            bodyFont: { size: 14 }
+        };
+    }
+
+    const commonOptions = {
+        responsive: true,
+        interaction: {
+            mode: "nearest",
+            intersect: false
+        },
+        plugins: {
+            legend: { display: false },
+            tooltip: tooltipConfig()
+        },
+        scales: {
+            x: { display: false },
+            y: { display: false }
+        }
+    };
+
+    /* =========================================================
+       SINGLE LINE CHART (LDR / Ultrasonic)
+    ========================================================= */
+    function createModernChart(ctx, labelName) {
+        return new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: [],
+                datasets: [{
+                    label: labelName,
+                    data: [],
+                    borderWidth: 3,
+                    tension: 0.45,
+                    borderColor: "#5A78FF",
+                    pointRadius: 0,
+                    hitRadius: 15,
+                    fill: true,
+                    backgroundColor: (chart) => {
+                        const { ctx, chartArea } = chart.chart;
+                        if (!chartArea) return null;
+                        const gradient = ctx.createLinearGradient(0, 0, 0, chartArea.bottom);
+                        gradient.addColorStop(0, "rgba(90,120,255,0.25)");
+                        gradient.addColorStop(1, "rgba(90,120,255,0.05)");
+                        return gradient;
+                    }
+                }]
+            },
+            options: commonOptions
         });
+    }
 
         // Sidebar navigation active state
         document.addEventListener('DOMContentLoaded', function() {
@@ -274,10 +342,132 @@
                     item.classList.add('active');
                 }
             });
-        });
+    /* =========================================================
+       DUAL LINE CHART (Suhu+Humid / pH+EC)
+    ========================================================= */
+    function createModernDualChart(ctx, labels) {
+        return new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: [],
+                datasets: labels.map((title, index) => ({
+                    label: title,
+                    data: [],
+                    tension: 0.45,
+                    borderWidth: 3,
+                    pointRadius: 0,
+                    hitRadius: 15,
+                    borderColor: index === 0 ? "#5A78FF" : "#FF7B7B",
+                    fill: true,
+                    backgroundColor: (chart) => {
+                        const { ctx, chartArea } = chart.chart;
+                        if (!chartArea) return null;
 
-        // TODO: Implementasi real-time data menggunakan MQTT/WebSocket
-        // TODO: Implementasi Chart.js untuk grafik monitoring
-    </script>
+                        const grad = ctx.createLinearGradient(0, 0, 0, chartArea.bottom);
+
+                        if (index === 0) {
+                            grad.addColorStop(0, "rgba(90,120,255,0.25)");
+                            grad.addColorStop(1, "rgba(90,120,255,0.05)");
+                        } else {
+                            grad.addColorStop(0, "rgba(255,120,120,0.25)");
+                            grad.addColorStop(1, "rgba(255,120,120,0.05)");
+                        }
+                        return grad;
+                    }
+                }))
+            },
+            options: commonOptions
+        });
+    }
+
+    /* =========================================================
+       INIT CHART
+    ========================================================= */
+    const chartTempHumid = createModernDualChart(
+        document.getElementById("chartTempHumid").getContext("2d"),
+        ["Suhu (°C)", "Kelembapan (%)"]
+    );
+
+    const chartPhEc = createModernDualChart(
+        document.getElementById("chartPhEc").getContext("2d"),
+        ["pH", "EC"]
+    );
+
+    const chartLdr = createModernChart(
+        document.getElementById("chartLdr").getContext("2d"),
+        "LDR (Lux)"
+    );
+
+    const chartUltra = createModernChart(
+        document.getElementById("chartUltrasonic").getContext("2d"),
+        "Level Air (%)"
+    );
+
+    /* =========================================================
+       UPDATE DATA CHART
+    ========================================================= */
+    async function updateCharts() {
+        const temp  = await getSensorData("dht_temp");
+        const humid = await getSensorData("dht_humid");
+        const ph    = await getSensorData("ph");
+        const ec    = await getSensorData("ec");
+        const ldr   = await getSensorData("ldr");
+        const ultra = await getSensorData("ultrasonic");
+
+        chartTempHumid.data.labels = temp.map(d => formatTime(d.timestamp));
+        chartTempHumid.data.datasets[0].data = temp.map(d => d.value);
+        chartTempHumid.data.datasets[1].data = humid.map(d => d.value);
+        chartTempHumid.update();
+
+        chartPhEc.data.labels = ph.map(d => formatTime(d.timestamp));
+        chartPhEc.data.datasets[0].data = ph.map(d => d.value);
+        chartPhEc.data.datasets[1].data = ec.map(d => d.value);
+        chartPhEc.update();
+
+        chartLdr.data.labels = ldr.map(d => formatTime(d.timestamp));
+        chartLdr.data.datasets[0].data = ldr.map(d => d.value);
+        chartLdr.update();
+
+        chartUltra.data.labels = ultra.map(d => formatTime(d.timestamp));
+        chartUltra.data.datasets[0].data = ultra.map(d => d.value);
+        chartUltra.update();
+    }
+
+    /* =========================================================
+       UPDATE NILAI KARTU
+    ========================================================= */
+    async function updateValueCards() {
+        const sensors = ["dht_temp", "dht_humid", "ph", "ec", "ldr", "ultrasonic"];
+
+        const mapping = {
+            "dht_temp": "val-temp",
+            "dht_humid": "val-humid",
+            "ph": "val-ph",
+            "ec": "val-ec",
+            "ldr": "val-ldr",
+            "ultrasonic": "val-ultra"
+        };
+
+        for (let sensor of sensors) {
+            const data = await getSensorData(sensor);
+            if (data.length > 0) {
+                const value = data[data.length - 1].value;
+                document.getElementById(mapping[sensor]).innerText = value;
+            }
+        }
+    }
+    async function refreshAll() {
+        lastFetchTime = Date.now();
+        await updateCharts();
+        await updateValueCards();
+    }
+
+    refreshAll();
+    setInterval(refreshAll, 3000);
+
+</script>
+
+
+
 </body>
 </html>

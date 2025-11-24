@@ -6,3 +6,4 @@ pymysql
 marshmallow
 flask_cors
 flask-jwt-extended
+paho

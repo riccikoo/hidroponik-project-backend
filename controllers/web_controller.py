@@ -1,8 +1,8 @@
 import io
 from flask import render_template, session, redirect, url_for, jsonify, request
-
 from extensions import db, bcrypt
 from models.user_model import User
+from models.sensor_model import Sensor
 from datetime import datetime, timedelta
 from validations.user_schema import validate_register, validate_login
 from models.sensor_model import Sensor
@@ -91,24 +91,60 @@ def landing_page():
     return render_template('landing.html')
 
 def login_page():
-    # kalau user sudah login → langsung ke dashboard
     if 'user_id' in session:
         return redirect(url_for('web_bp.dashboard_page'))
     return render_template('login.html')
 
 def register_page():
-    # kalau user sudah login → langsung ke dashboard
     if 'user_id' in session:
         return redirect(url_for('web_bp.dashboard_page'))
     return render_template('registrasi.html')
 
 def dashboard_page():
-    # pastikan user login
+    SENSORS = [
+        "dht_humid",
+        "dht_temp",
+        "ldr",
+        "ph",
+        "ec",
+        "ultrasonic"
+    ]
+
     if 'user_id' not in session:
         return redirect(url_for('web_bp.login_page'))
 
     user_name = session.get('user_name', 'User')
-    return render_template('dashboard.html', user_name=user_name)
+
+    sensor_data_map = {}
+    time_limit = datetime.utcnow() - timedelta(hours=24)   # batas 24 jam terakhir
+
+    for sensor_name in SENSORS:
+        data = (
+            Sensor.query
+            .filter(
+                Sensor.sensor_name == sensor_name,
+                Sensor.timestamp >= time_limit
+            )
+            .order_by(Sensor.timestamp.desc())
+            .limit(1)
+            .all()
+        )
+
+        sensor_data_map[sensor_name] = [
+            {
+                "id": row.id,
+                "sensor_name": row.sensor_name,
+                "value": float(row.value),
+                "timestamp": row.timestamp.isoformat()
+            }
+            for row in data
+        ]
+
+    return render_template(
+        'dashboard.html',
+        user_name=user_name,
+        sensors=sensor_data_map
+    )
 
 def logout():
     session.clear()
