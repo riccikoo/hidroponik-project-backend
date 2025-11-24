@@ -28,7 +28,7 @@ def create_app():
     bcrypt.init_app(app)
     Migrate(app, db)
     
-    init_mqtt() 
+    init_mqtt(app) 
 
     # Aktifkan CORS untuk semua route
     CORS(app, supports_credentials=True)
