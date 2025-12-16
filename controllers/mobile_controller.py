@@ -7,6 +7,10 @@ from datetime import datetime
 from validations.user_schema import validate_register, validate_login
 from flask_jwt_extended import create_access_token
 
+
+# =========================
+# REGISTER
+# =========================
 def register():
     errors = validate_register(request.json)
     if errors:
@@ -15,14 +19,16 @@ def register():
     data = request.json
     hashed_pw = bcrypt.generate_password_hash(data['password']).decode('utf-8')
 
+    now = datetime.utcnow()
+
     user = User(
         name=data['name'],
         email=data['email'],
         password=hashed_pw,
-        role='user',       
-        status='inactive',                
-        update_at=datetime.utcnow(),
-        create_at=datetime.utcnow()
+        role='user',
+        status='inactive',
+        create_at=now,
+        update_at=now
     )
 
     db.session.add(user)
@@ -30,19 +36,22 @@ def register():
 
     return jsonify({
         "status": True,
+        "message": "User registered successfully, wait for admin approval",
         "user": {
             "id": user.id,
             "name": user.name,
             "email": user.email,
             "role": user.role,
             "status": user.status,
-            "update_at": user.update_at.isoformat(),
-            "create_at": user.create_at.isoformat()
-        },
-        "message": "User registered successfully wait for admin applying"
+            "create_at": user.create_at.isoformat(),
+            "update_at": user.update_at.isoformat()
+        }
     }), 201
 
 
+# =========================
+# LOGIN
+# =========================
 def login():
     errors = validate_login(request.json)
     if errors:
@@ -55,54 +64,67 @@ def login():
         return jsonify({"status": False, "message": "Invalid credentials"}), 401
 
     if user.status != 'active':
-        return jsonify({"status": False, "message": "Account is currently inactive. Please contact support."}), 403 # Use 403 Forbidden
+        return jsonify({
+            "status": False,
+            "message": "Account is inactive. Please contact admin."
+        }), 403
 
     if not bcrypt.check_password_hash(user.password, data['password']):
         return jsonify({"status": False, "message": "Invalid credentials"}), 401
 
+    # update last activity
+    user.update_at = datetime.utcnow()
+    db.session.commit()
+
     access_token = create_access_token(identity=user.id)
+
     return jsonify({
         "status": True,
         "message": "Login successful",
-        "token": access_token, 
+        "token": access_token,
         "user": {
-            "id": user.id, 
-            "name": user.name, 
+            "id": user.id,
+            "name": user.name,
             "email": user.email,
-            "role": user.role, 
+            "role": user.role,
             "status": user.status,
-            # Ensure timestamp is serialized
-            "timestamp": user.timestamp if isinstance(user.timestamp, str) else (user.timestamp.isoformat() if user.timestamp else None)
+            "create_at": user.create_at.isoformat(),
+            "update_at": user.update_at.isoformat()
         }
     }), 200
 
+
+# =========================
+# SENSOR DATA
+# =========================
 def get_sensor_data():
-    sensor_name = request.args.get('name', None)
+    sensor_name = request.args.get('name')
     limit = request.args.get('limit', 50, type=int)
 
     query = Sensor.query
-
     if sensor_name:
         query = query.filter_by(sensor_name=sensor_name)
 
     data = query.order_by(Sensor.timestamp.desc()).limit(limit).all()
 
-    result = []
-    for row in data:
-        result.append({
-            "id": row.id,
-            "sensor_name": row.sensor_name,
-            "value": float(row.value),
-            "timestamp": row.timestamp.isoformat()
-        })
-
     return jsonify({
         "status": True,
         "sensor": sensor_name,
-        "data_count": len(result),
-        "data": result[::-1]
+        "data_count": len(data),
+        "data": [
+            {
+                "id": row.id,
+                "sensor_name": row.sensor_name,
+                "value": float(row.value),
+                "timestamp": row.timestamp.isoformat()
+            } for row in reversed(data)
+        ]
     }), 200
 
+
+# =========================
+# ADMIN UPDATE USER STATUS
+# =========================
 def admin_update_user_status(user_id):
     data = request.get_json()
     new_status = data.get("status")
@@ -115,6 +137,7 @@ def admin_update_user_status(user_id):
         return jsonify({"error": "User not found"}), 404
 
     user.status = new_status
+    user.update_at = datetime.utcnow()
     db.session.commit()
 
     return jsonify({
@@ -122,13 +145,17 @@ def admin_update_user_status(user_id):
         "message": f"User {user.name} status updated to {new_status}"
     }), 200
 
+
+# =========================
+# USER GET MESSAGE
+# =========================
 def user_get_messages():
     user_id = request.headers.get("X-User-ID")
-
     if not user_id:
         return jsonify({"error": "User ID is required"}), 400
 
-    msgs = Message.query.filter_by(user_id=user_id).order_by(Message.timestamp.desc()).all()
+    msgs = Message.query.filter_by(user_id=user_id)\
+        .order_by(Message.timestamp.desc()).all()
 
     return jsonify({
         "messages": [
@@ -141,6 +168,9 @@ def user_get_messages():
     }), 200
 
 
+# =========================
+# ADMIN SEND MESSAGE
+# =========================
 def admin_send_message(user_id):
     data = request.get_json()
     msg = data.get("message")
