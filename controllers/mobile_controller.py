@@ -20,8 +20,9 @@ def register():
         email=data['email'],
         password=hashed_pw,
         role='user',       
-        status='inactive',        
-        timestamp=datetime.utcnow()
+        status='inactive',                
+        update_at=datetime.utcnow(),
+        create_at=datetime.utcnow()
     )
 
     db.session.add(user)
@@ -35,7 +36,8 @@ def register():
             "email": user.email,
             "role": user.role,
             "status": user.status,
-            "timestamp": user.timestamp.isoformat()
+            "update_at": user.update_at.isoformat(),
+            "create_at": user.create_at.isoformat()
         },
         "message": "User registered successfully wait for admin applying"
     }), 201

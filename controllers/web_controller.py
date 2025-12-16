@@ -23,7 +23,8 @@ def register():
         password=hashed_pw,
         role='user',
         status='inactive',          # harus disetujui admin
-        timestamp=datetime.utcnow()
+        update_at=datetime.utcnow(),
+        create_at=datetime.utcnow()
     )
 
     db.session.add(user)
@@ -37,7 +38,8 @@ def register():
             "email": user.email,
             "role": user.role,
             "status": user.status,
-            "timestamp": user.timestamp.isoformat()
+            "create_at": user.timestamp.isoformat(),
+            "update_at": user.timestamp.isoformat(),
         },
         "message": "User registered successfully. Wait for admin approval."
     }), 201
@@ -83,7 +85,8 @@ def login():
             "email": user.email,
             "role": user.role,
             "status": user.status,
-            "timestamp": user.timestamp.isoformat()
+            "create_at": user.create_at.isoformat(),
+            "update_at": user.update_at.isoformat(),
         }
     }), 200
 

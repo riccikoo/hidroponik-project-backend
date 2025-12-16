@@ -8,4 +8,5 @@ class User(db.Model):
     role = db.Column(db.Enum('user','admin'), default='user', nullable=False)
     status = db.Column(db.Enum('active','inactive'), default='active', nullable=False)
     password = db.Column(db.String(255), nullable=False)
-    timestamp = db.Column(db.TIMESTAMP, nullable=False)
+    create_at = db.Column(db.TIMESTAMP, nullable=False)
+    update_at = db.Column(db.TIMESTAMP, nullable=False)
