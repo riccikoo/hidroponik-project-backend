@@ -21,7 +21,14 @@ from controllers.admin_controller import (
     get_message_replies,
     send_message_reply,
     get_simple_replies,
-    get_all_threads
+    get_all_threads,
+    
+    # User management
+    get_users,
+    get_user_details,
+    update_user,
+    delete_user,
+    create_user
 )
 
 # Create blueprint
@@ -47,3 +54,9 @@ admin_bp.route('/messages/<int:message_id>/reply', methods=['POST'])(send_messag
 admin_bp.route('/messages/<int:message_id>/simple-replies', methods=['GET'])(get_simple_replies)
 admin_bp.route('/messages/threads', methods=['GET'])(get_all_threads)
 admin_bp.route('/messages/<int:message_id>/read', methods=['POST'])(mark_message_read)
+
+admin_bp.route('/users', methods=['GET'])(get_users)
+admin_bp.route('/users/<int:user_id>', methods=['GET'])(get_user_details)
+admin_bp.route('/users/<int:user_id>', methods=['PUT'])(update_user)
+admin_bp.route('/users/<int:user_id>', methods=['DELETE'])(delete_user)
+admin_bp.route('/users', methods=['POST'])(create_user)

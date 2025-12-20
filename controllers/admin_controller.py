@@ -4,7 +4,494 @@ from datetime import datetime, timedelta
 from extensions import db
 from models.message_model import Message
 
-# ========== HELPER FUNCTIONS ==========
+# ========== USER MANAGEMENT ENDPOINTS ==========
+@jwt_required()
+def get_users():
+    """Get all users with pagination and search"""
+    try:
+        # Get current admin
+        current_user_id = get_jwt_identity()
+        admin = get_current_admin(current_user_id)
+        
+        if not admin:
+            return jsonify({
+                'status': False,
+                'message': 'Unauthorized access. Admin only.'
+            }), 403
+        
+        # Get query parameters
+        page = request.args.get('page', 1, type=int)
+        per_page = request.args.get('per_page', 10, type=int)
+        search = request.args.get('search', '').strip()
+        
+        # Base query
+        from models.user_model import User
+        query = User.query
+        
+        # Apply search filter
+        if search:
+            search_term = f"%{search}%"
+            query = query.filter(
+                db.or_(
+                    User.name.ilike(search_term),
+                    User.email.ilike(search_term)
+                )
+            )
+        
+        # Get paginated results - PAKAI create_at (bukan created_at)
+        paginated_users = query.order_by(
+            User.create_at.desc()  # ✅ PAKAI create_at
+        ).paginate(
+            page=page,
+            per_page=per_page,
+            error_out=False
+        )
+        
+        # Prepare user data
+        users_data = []
+        for user in paginated_users.items:
+            user_data = {
+                'id': user.id,
+                'name': user.name,
+                'email': user.email,
+                'role': user.role,
+                'status': user.status,
+                'create_at': user.create_at.isoformat() if user.create_at else None,  # ✅ create_at
+                'update_at': user.update_at.isoformat() if user.update_at else None,  # ✅ update_at
+                'last_login': None,  # Model tidak punya last_login
+            }
+            
+            users_data.append(user_data)
+        
+        # Build response
+        response = {
+            'status': True,
+            'message': 'Users retrieved successfully',
+            'data': {
+                'users': users_data,
+                'total': paginated_users.total,
+                'page': paginated_users.page,
+                'per_page': paginated_users.per_page,
+                'total_pages': paginated_users.pages
+            }
+        }
+        
+        return jsonify(response), 200
+        
+    except Exception as e:
+        print(f"❌ Error fetching users: {e}")
+        import traceback
+        print(traceback.format_exc())
+        return jsonify({
+            'status': False,
+            'message': f'Error fetching users: {str(e)}'
+        }), 500
+
+@jwt_required()
+def update_user(user_id):
+    """Update user status from Flutter"""
+    try:
+        # Get current admin
+        current_user_id = get_jwt_identity()
+        admin = get_current_admin(current_user_id)
+        
+        if not admin:
+            return jsonify({
+                'status': False,
+                'message': 'Unauthorized access. Admin only.'
+            }), 403
+        
+        # Get update data
+        data = request.get_json()
+        if not data:
+            return jsonify({
+                'status': False,
+                'message': 'No data provided'
+            }), 400
+        
+        print(f"📥 Received data for update: {data}")  # Debug
+        
+        # Get user
+        from models.user_model import User
+        user = User.query.get(user_id)
+        
+        if not user:
+            return jsonify({
+                'status': False,
+                'message': 'User not found'
+            }), 404
+        
+        # Prevent admin from modifying themselves
+        if user.id == admin.id:
+            return jsonify({
+                'status': False,
+                'message': 'Cannot modify your own account from admin panel'
+            }), 400
+        
+        # HANDLE STATUS UPDATE (INI YANG PENTING!)
+        if 'is_active' in data:
+            # Flutter mengirim is_active (boolean)
+            is_active_bool = data['is_active']
+            
+            # Convert boolean to string sesuai ENUM di database
+            new_status = 'active' if is_active_bool else 'inactive'
+            
+            print(f"🔄 Updating user {user_id} status: {user.status} -> {new_status}")
+            
+            # Update status di database
+            user.status = new_status
+            
+            # Update timestamp
+            user.update_at = datetime.utcnow()  # ✅ PAKAI update_at (bukan updated_at)
+            
+            db.session.commit()
+            
+            response = {
+                'status': True,
+                'message': f'User status updated to {new_status}',
+                'data': {
+                    'id': user.id,
+                    'name': user.name,
+                    'email': user.email,
+                    'status': new_status,
+                    'is_active': is_active_bool,  # Kirim balik boolean untuk Flutter
+                    'update_at': user.update_at.isoformat() if user.update_at else None
+                }
+            }
+            
+            print(f"✅ Update successful: {response}")
+            return jsonify(response), 200
+        
+        # Jika ada field lain yang diupdate
+        allowed_fields = ['role', 'name']
+        updated_fields = []
+        
+        for field in allowed_fields:
+            if field in data:
+                if field == 'role' and data[field] not in ['admin', 'user']:
+                    return jsonify({
+                        'status': False,
+                        'message': 'Role must be either "admin" or "user"'
+                    }), 400
+                
+                setattr(user, field, data[field])
+                updated_fields.append(field)
+        
+        if updated_fields:
+            user.update_at = datetime.utcnow()
+            db.session.commit()
+            
+            return jsonify({
+                'status': True,
+                'message': f'User updated ({len(updated_fields)} fields)',
+                'data': {
+                    'id': user.id,
+                    'updated_fields': updated_fields,
+                    'name': user.name,
+                    'email': user.email,
+                    'role': user.role,
+                    'status': user.status
+                }
+            }), 200
+        
+        return jsonify({
+            'status': False,
+            'message': 'No valid fields to update'
+        }), 400
+        
+    except Exception as e:
+        db.session.rollback()
+        print(f"❌ Error updating user: {e}")
+        import traceback
+        print(traceback.format_exc())
+        return jsonify({
+            'status': False,
+            'message': f'Error updating user: {str(e)}'
+        }), 500
+
+@jwt_required()
+def create_user():
+    """Create a new user (admin only)"""
+    try:
+        # Get current admin
+        current_user_id = get_jwt_identity()
+        admin = get_current_admin(current_user_id)
+        
+        if not admin:
+            return jsonify({
+                'status': False,
+                'message': 'Unauthorized access. Admin only.'
+            }), 403
+        
+        # Get user data
+        data = request.get_json()
+        if not data:
+            return jsonify({
+                'status': False,
+                'message': 'No data provided'
+            }), 400
+        
+        print(f"📥 Create user data: {data}")  # Debug
+        
+        # Required fields
+        required_fields = ['name', 'email', 'password']
+        for field in required_fields:
+            if field not in data or not data[field]:
+                return jsonify({
+                    'status': False,
+                    'message': f'Missing required field: {field}'
+                }), 400
+        
+        # Check if email already exists
+        from models.user_model import User
+        existing_user = User.query.filter_by(email=data['email']).first()
+        if existing_user:
+            return jsonify({
+                'status': False,
+                'message': 'Email already registered'
+            }), 400
+        
+        # Get status from request data
+        status_value = data.get('status', 'active')  # Default to active
+        
+        # Hash password (gunakan hashing yang sama dengan register user biasa)
+        from werkzeug.security import generate_password_hash
+        hashed_password = generate_password_hash(data['password'])
+        
+        # Create new user - HANYA PAKAI FIELD YANG ADA DI MODEL
+        current_time = datetime.utcnow()
+        new_user = User(
+            name=data['name'],
+            email=data['email'],
+            role=data.get('role', 'user'),
+            status=status_value,  # ✅ HANYA status, BUKAN is_active
+            password=hashed_password,  # Password sudah di-hash
+            create_at=current_time,
+            update_at=current_time
+        )
+        
+        # Save to database
+        db.session.add(new_user)
+        db.session.commit()
+        
+        # Prepare response
+        response = {
+            'status': True,
+            'message': 'User created successfully',
+            'data': {
+                'id': new_user.id,
+                'name': new_user.name,
+                'email': new_user.email,
+                'role': new_user.role,
+                'status': new_user.status,
+                'create_at': new_user.create_at.isoformat(),
+                'update_at': new_user.update_at.isoformat()
+            }
+        }
+        
+        print(f"✅ User created: {response}")
+        return jsonify(response), 201
+        
+    except Exception as e:
+        db.session.rollback()
+        print(f"❌ Error creating user: {e}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            'status': False,
+            'message': f'Error creating user: {str(e)}'
+        }), 500
+
+@jwt_required()
+def get_user_details(user_id):
+    """Get user details - simple version"""
+    try:
+        # Authentication
+        current_user_id = get_jwt_identity()
+        admin = get_current_admin(current_user_id)
+        
+        if not admin:
+            return jsonify({'status': False, 'message': 'Admin access required'}), 403
+        
+        # Get user
+        from models.user_model import User
+        user = User.query.get(user_id)
+        
+        if not user:
+            return jsonify({'status': False, 'message': 'User not found'}), 404
+        
+        # Build response data
+        user_data = {
+            'id': user.id,
+            'name': user.name,
+            'email': user.email,
+            'role': user.role,
+            'status': user.status,
+            'create_at': user.create_at.isoformat() if user.create_at else None,
+            'update_at': user.update_at.isoformat() if user.update_at else None,
+            'is_active': user.status == 'active',  # Boolean untuk frontend
+        }
+        
+        # Optional: Add password last updated info (jika ada)
+        if hasattr(user, 'password_updated_at'):
+            user_data['password_updated_at'] = user.password_updated_at.isoformat() if user.password_updated_at else None
+        
+        return jsonify({
+            'status': True,
+            'message': 'User details retrieved',
+            'data': user_data
+        }), 200
+        
+    except Exception as e:
+        print(f"❌ Error: {e}")
+        return jsonify({'status': False, 'message': str(e)}), 500
+    
+@jwt_required()
+def delete_user(user_id):
+    """Delete a user"""
+    try:
+        # Get current admin
+        current_user_id = get_jwt_identity()
+        admin = get_current_admin(current_user_id)
+        
+        if not admin:
+            return jsonify({
+                'status': False,
+                'message': 'Unauthorized access. Admin only.'
+            }), 403
+        
+        # Get user
+        from models.user_model import User
+        user = User.query.get(user_id)
+        
+        if not user:
+            return jsonify({
+                'status': False,
+                'message': 'User not found'
+            }), 404
+        
+        # Prevent admin from deleting themselves
+        if user.id == admin.id:
+            return jsonify({
+                'status': False,
+                'message': 'Cannot delete your own account'
+            }), 400
+        
+        # Check if user is admin (optional: prevent deleting other admins)
+        if user.role == 'admin' and user.id != admin.id:
+            return jsonify({
+                'status': False,
+                'message': 'Cannot delete another admin account'
+            }), 400
+        
+        # Delete user
+        db.session.delete(user)
+        db.session.commit()
+        
+        response = {
+            'status': True,
+            'message': 'User deleted successfully',
+            'data': {
+                'deleted_user_id': user_id,
+                'deleted_email': user.email
+            }
+        }
+        
+        return jsonify(response), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        print(f"❌ Error deleting user: {e}")
+        return jsonify({
+            'status': False,
+            'message': f'Error deleting user: {str(e)}'
+        }), 500
+
+@jwt_required()
+def create_user():
+    """Create a new user (admin only)"""
+    try:
+        # Get current admin
+        current_user_id = get_jwt_identity()
+        admin = get_current_admin(current_user_id)
+        
+        if not admin:
+            return jsonify({
+                'status': False,
+                'message': 'Unauthorized access. Admin only.'
+            }), 403
+        
+        # Get user data
+        data = request.get_json()
+        if not data:
+            return jsonify({
+                'status': False,
+                'message': 'No data provided'
+            }), 400
+        
+        # Required fields
+        required_fields = ['name', 'email', 'password']
+        for field in required_fields:
+            if field not in data or not data[field]:
+                return jsonify({
+                    'status': False,
+                    'message': f'Missing required field: {field}'
+                }), 400
+        
+        # Check if email already exists
+        from models.user_model import User
+        existing_user = User.query.filter_by(email=data['email']).first()
+        if existing_user:
+            return jsonify({
+                'status': False,
+                'message': 'Email already registered'
+            }), 400
+        
+        # Create new user
+        new_user = User(
+            name=data['name'],
+            email=data['email'],
+            role=data.get('role', 'user'),
+            status=data.get('status', 'active'),  # ✅ Gunakan status, bukan is_active
+            password=data['password'],  # Jangan lupa password!
+            create_at=datetime.utcnow(),
+            update_at=datetime.utcnow()  # Jangan lupa update_at
+        )
+        
+        # Set password (assuming User model has password field)
+        if hasattr(new_user, 'password'):
+            # You might need to hash the password here
+            new_user.password = data['password']  # In production, use password hashing!
+        
+        # Save to database
+        db.session.add(new_user)
+        db.session.commit()
+        
+        # Prepare response
+        response = {
+            'status': True,
+            'message': 'User created successfully',
+            'data': {
+                'id': new_user.id,
+                'name': new_user.name,
+                'email': new_user.email,
+                'role': new_user.role,
+                'status': new_user.status,  # ✅ PAKAI status, BUKAN is_active
+                'is_active': new_user.status == 'active',  # ✅ Optional: tambah boolean untuk frontend
+                'create_at': new_user.create_at.isoformat() if new_user.create_at else None,  # ✅ create_at (tanpa 'd')
+                'update_at': new_user.update_at.isoformat() if new_user.update_at else None  # ✅ Jangan lupa update_at
+            }
+        }
+        
+        return jsonify(response), 201
+        
+    except Exception as e:
+        db.session.rollback()
+        print(f"❌ Error creating user: {e}")
+        return jsonify({
+            'status': False,
+            'message': f'Error creating user: {str(e)}'
+        }), 500
 
 def get_current_admin(current_user_id):
 
