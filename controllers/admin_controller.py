@@ -1166,9 +1166,14 @@ def get_all_threads():
         current_user_id = get_jwt_identity()
         admin = get_current_admin(current_user_id)
         
+        # Cari semua user yang pernah mengirim pesan ke admin
         from sqlalchemy import distinct
         user_ids = db.session.query(distinct(Message.sender_id)).filter(
             Message.receiver_id == admin.id
+        ).union(
+            db.session.query(distinct(Message.receiver_id)).filter(
+                Message.sender_id == admin.id
+            )
         ).all()
         
         threads = []
@@ -1177,6 +1182,13 @@ def get_all_threads():
             if user_id == admin.id:
                 continue
                 
+            # Get user info
+            from models.user_model import User
+            user = User.query.get(user_id)
+            if not user:
+                continue
+            
+            # Get last message in conversation
             last_message = Message.query.filter(
                 db.or_(
                     db.and_(
@@ -1191,49 +1203,47 @@ def get_all_threads():
             ).order_by(Message.timestamp.desc()).first()
             
             if last_message:
-                original = Message.query.filter(
-                    Message.sender_id == user_id,
-                    Message.receiver_id == admin.id
-                ).order_by(Message.timestamp.asc()).first()
+                # Generate consistent thread ID
+                thread_id = f"{min(user_id, admin.id)}-{max(user_id, admin.id)}"
                 
-                if original:
-                    from models.user_model import User
-                    user = User.query.get(user_id)
-                    
-                    unread_count = Message.query.filter(
-                        Message.sender_id == user_id,
-                        Message.receiver_id == admin.id,
-                        Message.is_read == False
-                    ).count()
-                    
-                    threads.append({
-                        "thread_id": original.id,
-                        "user": {
-                            "id": user_id,
-                            "name": user.name if user else "User",
-                            "email": user.email if user else "user@email.com"
-                        },
-                        "last_message": {
-                            "id": last_message.id,
-                            "content": last_message.message[:100] + "..." if len(last_message.message) > 100 else last_message.message,
-                            "sender_is_admin": last_message.sender_id == admin.id,
-                            "timestamp": last_message.timestamp.isoformat() if last_message.timestamp else None
-                        },
-                        "unread_count": unread_count,
-                        "total_messages": Message.query.filter(
-                            db.or_(
-                                db.and_(
-                                    Message.sender_id == user_id,
-                                    Message.receiver_id == admin.id
-                                ),
-                                db.and_(
-                                    Message.sender_id == admin.id,
-                                    Message.receiver_id == user_id
-                                )
-                            )
-                        ).count()
-                    })
+                # Count unread messages
+                unread_count = Message.query.filter(
+                    Message.sender_id == user_id,
+                    Message.receiver_id == admin.id,
+                    Message.is_read == False
+                ).count()
+                
+                # Count total messages
+                total_messages = Message.query.filter(
+                    db.or_(
+                        db.and_(
+                            Message.sender_id == user_id,
+                            Message.receiver_id == admin.id
+                        ),
+                        db.and_(
+                            Message.sender_id == admin.id,
+                            Message.receiver_id == user_id
+                        )
+                    )
+                ).count()
+                
+                threads.append({
+                    "thread_id": thread_id,  # Use consistent thread ID
+                    "user_id": user_id,
+                    "user_name": user.name,
+                    "user_email": user.email,
+                    "last_message": {
+                        "id": last_message.id,
+                        "content": last_message.message[:100] + "..." if len(last_message.message) > 100 else last_message.message,
+                        "is_admin": last_message.sender_id == admin.id,
+                        "timestamp": last_message.timestamp.isoformat() if last_message.timestamp else None
+                    },
+                    "unread_count": unread_count,
+                    "total_messages": total_messages,
+                    "last_message_id": last_message.id  # Important for replies
+                })
         
+        # Sort by last message timestamp
         threads.sort(key=lambda x: x['last_message']['timestamp'] or '', reverse=True)
         
         return jsonify({
@@ -1247,4 +1257,83 @@ def get_all_threads():
         
     except Exception as e:
         print(f"Error getting threads: {e}")
+        return jsonify({"success": False, "message": str(e)}), 500
+
+@jwt_required()
+def get_thread_messages():
+    """Get all messages in a specific thread"""
+    try:
+        current_user_id = get_jwt_identity()
+        admin = get_current_admin(current_user_id)
+        
+        # Get parameters
+        user_id = request.args.get('user_id', type=int)
+        thread_id = request.args.get('thread_id')
+        
+        if not user_id and not thread_id:
+            return jsonify({"success": False, "message": "user_id or thread_id required"}), 400
+        
+        # If thread_id provided, parse it
+        if thread_id:
+            try:
+                user_id = int(thread_id.split('-')[1])
+                if user_id == admin.id:
+                    user_id = int(thread_id.split('-')[0])
+            except:
+                return jsonify({"success": False, "message": "Invalid thread_id"}), 400
+        
+        # Get all messages between admin and user
+        messages = Message.query.filter(
+            db.or_(
+                db.and_(
+                    Message.sender_id == user_id,
+                    Message.receiver_id == admin.id
+                ),
+                db.and_(
+                    Message.sender_id == admin.id,
+                    Message.receiver_id == user_id
+                )
+            )
+        ).order_by(Message.timestamp.asc()).all()
+        
+        # Mark user messages as read
+        Message.query.filter(
+            Message.sender_id == user_id,
+            Message.receiver_id == admin.id,
+            Message.is_read == False
+        ).update({Message.is_read: True})
+        db.session.commit()
+        
+        # Get user info
+        from models.user_model import User
+        user = User.query.get(user_id)
+        
+        messages_data = []
+        for msg in messages:
+            messages_data.append({
+                "id": msg.id,
+                "content": msg.message,
+                "sender_id": msg.sender_id,
+                "receiver_id": msg.receiver_id,
+                "is_admin": msg.sender_id == admin.id,
+                "is_read": msg.is_read,
+                "timestamp": msg.timestamp.isoformat() if msg.timestamp else None
+            })
+        
+        return jsonify({
+            "success": True,
+            "data": {
+                "thread_id": f"{min(user_id, admin.id)}-{max(user_id, admin.id)}",
+                "user": {
+                    "id": user_id,
+                    "name": user.name if user else "User",
+                    "email": user.email if user else "user@email.com"
+                },
+                "total_messages": len(messages),
+                "messages": messages_data
+            }
+        }), 200
+        
+    except Exception as e:
+        print(f"Error getting thread messages: {e}")
         return jsonify({"success": False, "message": str(e)}), 500
