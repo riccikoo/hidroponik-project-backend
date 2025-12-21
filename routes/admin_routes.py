@@ -16,6 +16,7 @@ from controllers.admin_controller import (
     mark_message_read,
     delete_message,
     admin_unread_count,
+    get_thread_messages,
     
     # Message replies
     get_message_replies,
@@ -53,7 +54,7 @@ admin_bp.route('/messages/<int:message_id>/replies', methods=['GET'])(get_messag
 admin_bp.route('/messages/<int:message_id>/reply', methods=['POST'])(send_message_reply)
 admin_bp.route('/messages/<int:message_id>/simple-replies', methods=['GET'])(get_simple_replies)
 admin_bp.route('/messages/threads', methods=['GET'])(get_all_threads)
-admin_bp.route('/messages/<int:message_id>/read', methods=['POST'])(mark_message_read)
+admin_bp.route('/messages/thread', methods=['GET'])(get_thread_messages)
 
 admin_bp.route('/users', methods=['GET'])(get_users)
 admin_bp.route('/users/<int:user_id>', methods=['GET'])(get_user_details)
