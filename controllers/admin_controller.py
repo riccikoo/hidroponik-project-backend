@@ -981,7 +981,7 @@ def get_message_replies(message_id):
             Message.sender_id == user_id,
             Message.receiver_id == admin.id,
             Message.id != message_id,
-            Message.timestamp >= original_message.timestamp
+            Message.timestamp > original_message.timestamp
         ).order_by(Message.timestamp.asc()).all()
         
         admin_replies = Message.query.filter(
