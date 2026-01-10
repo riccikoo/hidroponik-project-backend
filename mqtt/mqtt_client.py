@@ -67,19 +67,33 @@ def on_message(client, userdata, msg):
     try:
         with app.app_context():
             for name, value in mapping.items():
-                if value is not None:
-                    row = Sensor(
-                        sensor_name=name,
-                        value=float(value),
-                        timestamp=datetime.utcnow()
-                    )
-                    db.session.add(row)
+
+                # ⛔ Skip jika None atau 0
+                if value is None:
+                    continue
+
+                try:
+                    value = float(value)
+                except (ValueError, TypeError):
+                    continue
+
+                if value == 0:
+                    continue
+
+                # ✅ Simpan hanya data valid
+                row = Sensor(
+                    sensor_name=name,
+                    value=value,
+                    timestamp=datetime.utcnow()
+                )
+                db.session.add(row)
 
             db.session.commit()
             print("[DB] Saved successfully!")
 
     except Exception as e:
         print("[ERROR MQTT SAVE]:", e)
+
 
 # ======================
 # MQTT BACKGROUND LOOP
